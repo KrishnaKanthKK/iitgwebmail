@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -68,8 +69,14 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import static android.R.attr.id;
+import static android.R.attr.subMenuArrow;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mailFilter;
     private LinearLayout linearFilter;
     public static int mailSet = 1;
+    public List<String> folderNames = new ArrayList<>();
 
 
     public ProgressBar getProgressBar() {
@@ -180,9 +188,6 @@ public class MainActivity extends AppCompatActivity
         mailFilter =(TextView) findViewById(R.id.textview_mail_filter);
         linearFilter = (LinearLayout) findViewById(R.id.linear_filter);
 
-        new loadRecentMails(MainActivity.this, username, password, server,
-                activeFolder,mailSet,"oncreate").execute();
-
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,11 +217,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Log.e("mailset", String.valueOf(mailSet));
-                if (mailSet < (float) RecyclerAdapter.emails.get(0).getTotalMails()/50){
-                    mailSet++;
-                    new loadRecentMails(MainActivity.this, username, password, server,
-                            activeFolder,mailSet,"greaterbutton").execute();
+                try {
+                    if (mailSet < (float) RecyclerAdapter.emails.get(0).getTotalMails()/50){
+                        mailSet++;
+                        new loadRecentMails(MainActivity.this, username, password, server,
+                                activeFolder,mailSet,"greaterbutton").execute();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
 
             }
         });
@@ -270,7 +280,6 @@ public class MainActivity extends AppCompatActivity
         subMenu = m.addSubMenu("Folders");
 
         populateNavigationFolderItems(subMenu);
-        populateNavigationFolderItemsExtra(subMenu);
 
         navigationView.setNavigationItemSelectedListener(this);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -287,6 +296,19 @@ public class MainActivity extends AppCompatActivity
         }else{
             swipeRefreshLayout.setColorSchemeColors(getApplicationContext().getResources().getColor(R.color.colorTheme));
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new loadRecentMails(MainActivity.this, username, password, server,
+                        activeFolder,mailSet,"oncreate").execute();
+                Log.e("dsa","adsjkads");
+                POP3ssl pop3ssl = new POP3ssl();
+                folderNames = pop3ssl.getFolderNames(username, password, server);
+                Log.e("foldernames", String.valueOf(folderNames));
+                populateNavigationFolderItemsExtra(folderNames,subMenu);
+            }
+        }).start();
 
         //checkForUpdate();
     }
@@ -334,60 +356,22 @@ public class MainActivity extends AppCompatActivity
         Log.e("item","item");
         //noinspection SimplifiableIfStatement
         if (id == R.id.move || id == R.id.copy) {
-            final POP3ssl pop3ssl = new POP3ssl();
-            final List<String> folderNames = pop3ssl.getFolderNames(username, password, server);
-            LayoutInflater li = LayoutInflater.from(getApplicationContext());
-
-            View promptsView = li.inflate(R.layout.move_dialog, null);
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-            // set prompts.xml to alertdialog builder
-            alertDialogBuilder.setView(promptsView);
-            String[] arraySpinner = new String[folderNames.size()];
-            for (int i = 0; i < folderNames.size(); i++) {
-                arraySpinner[i] = folderNames.get(i);
+            if (RecyclerAdapter.checkedEmails.size() >= 1){
+                populateAlert(id);
+            }else{
+                Toast.makeText(getApplicationContext(), "No messages were selected",
+                        Toast.LENGTH_SHORT).show();
             }
-            Spinner spinner = (Spinner) promptsView.findViewById(R.id.spinner_move);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, arraySpinner);
-            spinner.setAdapter(adapter);
-            spinner.setOnItemSelectedListener(new OnSpinnerItemClicked());
-            // set dialog message
-            alertDialogBuilder
-                    .setCancelable(false)
-                    .setNegativeButton("Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            if (id == R.id.move) {
-                alertDialogBuilder
-                        .setTitle("Move to")
-                        .setPositiveButton("Move",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        new asyncMoveMails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder, spinnerFolderName).execute();
-                                    }
-                                });
-            } else if (id == R.id.copy) {
-                alertDialogBuilder
-                        .setTitle("Copy to")
-                        .setPositiveButton("Copy",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        new asyncCopyMails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder, spinnerFolderName).execute();
-                                    }
-                                });
-            }
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
             return true;
         } else if (id == R.id.delete) {
-            new asyncDeleteEmails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder).execute();
-            Log.e("size", String.valueOf(RecyclerAdapter.checkedEmails.size()));
+            if (RecyclerAdapter.checkedEmails.size() >= 1){
+                new asyncDeleteEmails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder).execute();
+                Log.e("size", String.valueOf(RecyclerAdapter.checkedEmails.size()));
+            }else {
+                Toast.makeText(getApplicationContext(), "No messages were selected",
+                        Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -629,9 +613,8 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-    public void populateNavigationFolderItemsExtra(SubMenu s){
-        POP3ssl pop3ssl = new POP3ssl();
-        for (final String name : pop3ssl.getFolderNames(username, password, server)) {
+    public void populateNavigationFolderItemsExtra(List<String> folderNames,SubMenu s){
+        for (final String name : folderNames) {
             if (!(name.equals("Sent") || name.equals("INBOX"))) {
                 s.add(name).setIcon(R.drawable.ic_folder_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
@@ -658,6 +641,59 @@ public class MainActivity extends AppCompatActivity
         // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
     }
+    private void populateAlert(int id){
+        final POP3ssl pop3ssl = new POP3ssl();
+        LayoutInflater li = LayoutInflater.from(getApplicationContext());
+
+        View promptsView = li.inflate(R.layout.move_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+        final List<String> folderNames = pop3ssl.getFolderNames(username, password, server);
+        String[] arraySpinner = new String[folderNames.size()];
+        for (int i = 0; i < folderNames.size(); i++) {
+            arraySpinner[i] = folderNames.get(i);
+        }
+        Spinner spinner = (Spinner) promptsView.findViewById(R.id.spinner_move);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, arraySpinner);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new OnSpinnerItemClicked());
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        if (id == R.id.move) {
+            alertDialogBuilder
+                    .setTitle("Move to")
+                    .setPositiveButton("Move",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new asyncMoveMails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder, spinnerFolderName).execute();
+                                }
+                            });
+        } else if (id == R.id.copy) {
+            alertDialogBuilder
+                    .setTitle("Copy to")
+                    .setPositiveButton("Copy",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new asyncCopyMails(MainActivity.this, username, password, server, RecyclerAdapter.checkedEmails, activeFolder, spinnerFolderName).execute();
+                                }
+                            });
+        }
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
 
     private void populateWebView(){
         webView.setVisibility(View.VISIBLE);
@@ -665,9 +701,9 @@ public class MainActivity extends AppCompatActivity
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
         webView.loadUrl("https://webmail.iitg.ernet.in/src/login.php?secure_login=yes");
+        webView.requestFocus(View.FOCUS_DOWN);
 
         webView.getSettings().setDomStorageEnabled(true);
-
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -679,7 +715,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.e("test","test");
-                view.loadUrl("javascript:var uselessvar1 = document.getElementsByName('login_username')[0].value = '"+username+"';var uselessvar =document.getElementsByName('secretkey')[0].value='"+password+"';");
+                view.loadUrl("javascript:var uselessvar1 = document.getElementsByName('login_username')[0].value = '"+username+"';" +
+                        "var uselessvar =document.getElementsByName('secretkey')[0].value='"+password+"';");
+                if (view.getUrl().equals("https://webmail.iitg.ernet.in/src/login.php?secure_login=yes")){
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                }
             }
         });
     }

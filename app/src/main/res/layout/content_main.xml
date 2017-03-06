@@ -90,9 +90,17 @@
          android:id="@+id/webview_main"
          android:layout_width="match_parent"
          android:layout_height="match_parent"
-         android:visibility="gone">
-
+         android:visibility="gone"
+         android:focusable="true">
      </WebView>
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Error Connecting to Local Network"
+         android:layout_gravity="center_horizontal"
+         android:layout_marginTop="150dp"
+         android:visibility="gone"
+         />
  </FrameLayout>
 
 </RelativeLayout>

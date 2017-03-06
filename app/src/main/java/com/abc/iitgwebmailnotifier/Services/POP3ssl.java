@@ -207,7 +207,7 @@ public class POP3ssl {
                             System.out.println("file name : " + handler.getName());
                         } else {
                             Log.e("3","3");
-                            content = getText(bodyPart).getContent();// the changed code
+                            content = getText(bodyPart).getContent();
                             body.setContent(content);
                         }
                     }
@@ -215,7 +215,7 @@ public class POP3ssl {
                     Log.e("4","4");
                     content = message.getContent().toString();
                     body.setContent(content);
-                    body.setHtml(false);
+                    body.setHtml(DetectHtml.isHtml(content));
                 }
                 inbox.close(true);
                 emailStore.close();
@@ -298,7 +298,7 @@ public class POP3ssl {
             int messageCount = inbox.getMessageCount();
             for (int i = messageCount-1-(mailset-1)*count; i >= (messageCount-count-(mailset-1)*count); i--) {
                 Email email = new Email();
-                email.setFrom(String.valueOf(messages[i].getFrom()[0]).replaceAll("[\"]",""));
+                email.setFrom(String.valueOf(messages[i].getFrom()[0]));
                 email.setSubject(messages[i].getSubject());
                 email.setUID(inbox.getUID(messages[i]));
                 email.setSeen(messages[i].isSet(Flags.Flag.SEEN));

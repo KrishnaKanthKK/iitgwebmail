@@ -20,6 +20,10 @@ import com.abc.iitgwebmailnotifier.R;
 import com.abc.iitgwebmailnotifier.Services.LoginManager;
 import com.abc.iitgwebmailnotifier.Services.UserSessionManager;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 /**
  * Created by aarkay0602 on 24/1/17.
  */
@@ -104,13 +108,10 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
                 }
                 String username = email.getText().toString();
                 String pass = password.getText().toString().trim();
-
                 new LoginManager(LoginActivity.this,username,pass,POP3server).execute();
-
             }
         });
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

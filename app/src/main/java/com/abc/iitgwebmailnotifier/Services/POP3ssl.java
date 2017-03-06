@@ -7,8 +7,10 @@ import com.abc.iitgwebmailnotifier.models.Email;
 import com.sun.mail.imap.IMAPFolder;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -60,9 +62,9 @@ public class POP3ssl {
             props.setProperty("mail."+protocol+".ssl.enable", "true");
             props.put("mail."+protocol+".socketFactory" , "993");
             props.setProperty("mail."+protocol+".socketFactory.class" , a );
+            props.put("mail."+protocol+".connectiontimeout",1000);
 
             Session session = Session.getInstance(props);
-
 
             emailStore = session.getStore(protocol+"s");
             emailStore.connect(server,993,username, password);
@@ -71,13 +73,16 @@ public class POP3ssl {
             }
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
+            return "Failed";
         } catch (AuthenticationFailedException e){
             e.printStackTrace();
             return "Failed";
         } catch (MessagingException e) {
+            if (e.getMessage().equals("Connection refused")){
+                return "Refused";
+            }
             e.printStackTrace();
             return "FAILED";
-
         } catch (Exception e){
             e.printStackTrace();
             return "FAILED";
@@ -85,95 +90,102 @@ public class POP3ssl {
         return "OK";
     }
     public String copyEmails(String user,String pass,String server,List<Email> emails,String fromFolder,String toFolder){
-        loginuser(user,pass,server,"imap",false);
-        try {
-            IMAPFolder from;
-            if (fromFolder.equals("Sent")){
-                from = (IMAPFolder) emailStore.getFolder("INBOX");
-                from.open(Folder.READ_WRITE);
-                from = (IMAPFolder) from.getFolder("Sent");
-                from.open(Folder.READ_WRITE);
-            }else {
-                from = (IMAPFolder) emailStore.getFolder(fromFolder);
-                from.open(Folder.READ_WRITE);
+        if (loginuser(user,pass,server,"imap",false).equals("OK")){
+            try {
+                IMAPFolder from;
+                if (fromFolder.equals("Sent")){
+                    from = (IMAPFolder) emailStore.getFolder("INBOX");
+                    from.open(Folder.READ_WRITE);
+                    from = (IMAPFolder) from.getFolder("Sent");
+                    from.open(Folder.READ_WRITE);
+                }else {
+                    from = (IMAPFolder) emailStore.getFolder(fromFolder);
+                    from.open(Folder.READ_WRITE);
+                }
+                IMAPFolder to = (IMAPFolder) emailStore.getFolder(toFolder);
+                long[] uids = new long[emails.size()];
+                for (int i = 0; i < emails.size(); i++) {
+                    uids[i] = emails.get(i).getUID();
+                }
+                from.copyMessages(from.getMessagesByUID(uids),to);
+                from.close(true);
+                emailStore.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "FAILED";
+            } catch (Exception e){
+                e.printStackTrace();
+                return "FAILED";
             }
-            IMAPFolder to = (IMAPFolder) emailStore.getFolder(toFolder);
-            long[] uids = new long[emails.size()];
-            for (int i = 0; i < emails.size(); i++) {
-                uids[i] = emails.get(i).getUID();
-            }
-            from.copyMessages(from.getMessagesByUID(uids),to);
-            from.close(true);
-            emailStore.close();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "FAILED";
-        } catch (Exception e){
-            e.printStackTrace();
-            return "FAILED";
+            return "OK";
         }
-        return "OK";
+        return "FAILED";
+
     }
 
     public String moveEmails(String user,String pass,String server,List<Email> emails,String fromFolder,String toFolder){
-        loginuser(user,pass,server,"imap",false);
-        try {
-            IMAPFolder from;
-            if (fromFolder.equals("Sent")){
-                from = (IMAPFolder) emailStore.getFolder("INBOX");
-                from.open(Folder.READ_WRITE);
-                from = (IMAPFolder) from.getFolder("Sent");
-                from.open(Folder.READ_WRITE);
-            }else {
-                from = (IMAPFolder) emailStore.getFolder(fromFolder);
-                from.open(Folder.READ_WRITE);
+        if (loginuser(user,pass,server,"imap",false).equals("OK")){
+            try {
+                IMAPFolder from;
+                if (fromFolder.equals("Sent")){
+                    from = (IMAPFolder) emailStore.getFolder("INBOX");
+                    from.open(Folder.READ_WRITE);
+                    from = (IMAPFolder) from.getFolder("Sent");
+                    from.open(Folder.READ_WRITE);
+                }else {
+                    from = (IMAPFolder) emailStore.getFolder(fromFolder);
+                    from.open(Folder.READ_WRITE);
+                }
+                IMAPFolder to = (IMAPFolder) emailStore.getFolder(toFolder);
+                long[] uids = new long[emails.size()];
+                for (int i=0;i<emails.size();i++){
+                    uids[i] = emails.get(i).getUID();
+                }
+                from.copyMessages(from.getMessagesByUID(uids),to);
+                for (Message m: from.getMessagesByUID(uids)){
+                    m.setFlag(Flags.Flag.DELETED, true);
+                }
+                from.close(true);
+                emailStore.close();
+            }catch (MessagingException e){
+                e.printStackTrace();
+                return "FAILED";
             }
-            IMAPFolder to = (IMAPFolder) emailStore.getFolder(toFolder);
-            long[] uids = new long[emails.size()];
-            for (int i=0;i<emails.size();i++){
-                uids[i] = emails.get(i).getUID();
-            }
-            from.copyMessages(from.getMessagesByUID(uids),to);
-            for (Message m: from.getMessagesByUID(uids)){
-                m.setFlag(Flags.Flag.DELETED, true);
-            }
-            from.close(true);
-            emailStore.close();
-        }catch (MessagingException e){
-            e.printStackTrace();
-            return "FAILED";
+            return "OK";
         }
-        return "OK";
-
+        return "FAILED";
     }
 
     public String deleteEmails(String user,String pass,String server,List<Email> emails,String folder){
-        loginuser(user,pass,server,"imap",false);
-        try {
-            IMAPFolder inbox;
-            if (folder.equals("Sent")){
-                inbox = (IMAPFolder) emailStore.getFolder("INBOX");
-                inbox.open(Folder.READ_WRITE);
-                inbox = (IMAPFolder) inbox.getFolder("Sent");
-                inbox.open(Folder.READ_WRITE);
-            }else {
-                inbox = (IMAPFolder) emailStore.getFolder(folder);
-                inbox.open(Folder.READ_WRITE);
+        if (loginuser(user,pass,server,"imap",false).equals("OK")){
+            try {
+                IMAPFolder inbox;
+                if (folder.equals("Sent")){
+                    inbox = (IMAPFolder) emailStore.getFolder("INBOX");
+                    inbox.open(Folder.READ_WRITE);
+                    inbox = (IMAPFolder) inbox.getFolder("Sent");
+                    inbox.open(Folder.READ_WRITE);
+                }else {
+                    inbox = (IMAPFolder) emailStore.getFolder(folder);
+                    inbox.open(Folder.READ_WRITE);
+                }
+                for (Email e: emails){
+                    Message message = inbox.getMessageByUID(e.getUID());
+                    message.setFlag(Flags.Flag.DELETED, true);
+                }
+                inbox.close(true);
+                emailStore.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "FAILED";
+            } catch (Exception e){
+                e.printStackTrace();
+                return "FAILED";
             }
-            for (Email e: emails){
-                Message message = inbox.getMessageByUID(e.getUID());
-                message.setFlag(Flags.Flag.DELETED, true);
-            }
-            inbox.close(true);
-            emailStore.close();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "FAILED";
-        } catch (Exception e){
-            e.printStackTrace();
-            return "FAILED";
+            return "OK";
         }
-        return "OK";
+        return "FAILED";
+
     }
     public Body loadBody(String username,String password,String server,long UID,String folder) {
         if (loginuser(username, password, server,"imap", false).equals("OK")){
@@ -191,6 +203,8 @@ public class POP3ssl {
                     inbox.open(Folder.READ_WRITE);
                 }
                 Message message = inbox.getMessageByUID(UID);
+                Address[] recipients = message.getRecipients(Message.RecipientType.TO);
+                body.setRecipients(recipients[0].toString());
                 Object msgContent = message.getContent();
                 content = "";
      /* Check if content is pure text/html or in parts */
@@ -236,93 +250,98 @@ public class POP3ssl {
 
     public String createFolder(String user,String pass,String server,String folderName) {
         boolean isCreated = true;
-        loginuser(user,pass,server,"imap",false);
-        try {
-            Folder defaultFolder = emailStore.getDefaultFolder();
-            Folder newFolder = defaultFolder.getFolder(folderName);
-            isCreated = newFolder.create(Folder.HOLDS_MESSAGES);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "FAILED";
-        } catch (Exception e){
-            e.printStackTrace();
-            return "FAILED";
-        }return "OK";
-
+        if (loginuser(user,pass,server,"imap",false).equals("OK")){
+            try {
+                Folder defaultFolder = emailStore.getDefaultFolder();
+                Folder newFolder = defaultFolder.getFolder(folderName);
+                isCreated = newFolder.create(Folder.HOLDS_MESSAGES);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "FAILED";
+            } catch (Exception e){
+                e.printStackTrace();
+                return "FAILED";
+            }return "OK";
+        }return "FAILED";
     }
 
     public List<String> getFolderNames(String user, String pass, String server){
-        loginuser(user, pass, server,"imap", false);
-        try {
-            Folder[] f = emailStore.getDefaultFolder().list();
-            for (Folder a : f){
-                FolderNames.add(a.getName());
+        if (loginuser(user, pass, server,"imap", false).equals("OK")){
+            try {
+                Folder[] f = emailStore.getDefaultFolder().list();
+                for (Folder a : f){
+                    FolderNames.add(a.getName());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return FolderNames;
+            return FolderNames;
+        }return Collections.emptyList();
     }
     public String deleteFolder(String user,String pass,String server,String folderName){
-        loginuser(user,pass,server,"imap",false);
-        boolean isDeleted=false;
-        try {
-            IMAPFolder folder = (IMAPFolder) emailStore.getFolder(folderName);
-            folder.delete(true);
-            Log.e("delete", String.valueOf(isDeleted));
-            emailStore.close();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "FAILED";
-        } catch (Exception e){
-            e.printStackTrace();
-            return "FAILED";
-        }
-        return "OK";
+        if (loginuser(user,pass,server,"imap",false).equals("OK")){
+            boolean isDeleted=false;
+            try {
+                IMAPFolder folder = (IMAPFolder) emailStore.getFolder(folderName);
+                folder.delete(true);
+                Log.e("delete", String.valueOf(isDeleted));
+                emailStore.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "FAILED";
+            } catch (Exception e){
+                e.printStackTrace();
+                return "FAILED";
+            }
+            return "OK";
+        }return "FAILED";
     }
     public List<Email> getEmails(String username, String password, String server, int count,
                                  String position,String folderName,int mailset){
-        loginuser(username, password, server,"imap", false);
-        try {
-            IMAPFolder inbox;
-            if (folderName.equals("Sent")){
-                inbox = (IMAPFolder) emailStore.getFolder("INBOX");
-                inbox.open(Folder.READ_ONLY);
-                inbox = (IMAPFolder) inbox.getFolder("Sent");
-                inbox.open(Folder.READ_ONLY);
-            }else {
-                inbox = (IMAPFolder) emailStore.getFolder(folderName);
-                inbox.open(Folder.READ_ONLY);
-            }
-            Message[] messages = inbox.getMessages();
-            int messageCount = inbox.getMessageCount();
-            for (int i = messageCount-1-(mailset-1)*count; i >= (messageCount-count-(mailset-1)*count); i--) {
-                Email email = new Email();
-                email.setFrom(String.valueOf(messages[i].getFrom()[0]));
-                email.setSubject(messages[i].getSubject());
-                email.setUID(inbox.getUID(messages[i]));
-                email.setSeen(messages[i].isSet(Flags.Flag.SEEN));
-                Log.e("id", String.valueOf(inbox.getUID(messages[i])));
-                email.setMessageNumber(messages[i].getMessageNumber());
-                email.setSentDate(getDate(messages[i].getSentDate().getTime()));
-                email.setFromFolder(folderName);
-                email.setTotalMails(messageCount);
-                List<String> toAddresses = new ArrayList<String>();
-                Address[] recipients = messages[i].getRecipients(Message.RecipientType.TO);
-                for (Address address : recipients) {
-                    toAddresses.add(address.toString());
+        if (loginuser(username, password, server,"imap", false).equals("OK")){
+            try {
+                IMAPFolder inbox;
+                if (folderName.equals("Sent")){
+                    inbox = (IMAPFolder) emailStore.getFolder("INBOX");
+                    inbox.open(Folder.READ_ONLY);
+                    inbox = (IMAPFolder) inbox.getFolder("Sent");
+                    inbox.open(Folder.READ_ONLY);
+                }else {
+                    inbox = (IMAPFolder) emailStore.getFolder(folderName);
+                    inbox.open(Folder.READ_ONLY);
                 }
-                email.setToAddresses(toAddresses);
-                EmailsInList.add(email);
+
+                Message[] messages = inbox.getMessages();
+                int messageCount = inbox.getMessageCount();
+                for (int i = messageCount-1-(mailset-1)*count; i >= (messageCount-count-(mailset-1)*count); i--) {
+                    Email email = new Email();
+                    email.setFrom(String.valueOf(messages[i].getFrom()[0]).replaceAll("[\"]",""));
+                    email.setSubject(messages[i].getSubject());
+                    email.setUID(inbox.getUID(messages[i]));
+                    email.setSeen(messages[i].isSet(Flags.Flag.SEEN));
+                    Log.e("id", String.valueOf(inbox.getUID(messages[i])));
+                    email.setMessageNumber(messages[i].getMessageNumber());
+                    email.setSentDate(getDate(messages[i].getSentDate().getTime()));
+                    email.setFromFolder(folderName);
+                    email.setTotalMails(messageCount);
+                    List<String> toAddresses = new ArrayList<String>();
+                    Address[] recipients = messages[i].getRecipients(Message.RecipientType.TO);
+                    for (Address address : recipients) {
+                        toAddresses.add(address.toString());
+                    }
+                    email.setToAddresses(toAddresses);
+                    EmailsInList.add(email);
+                }
+                inbox.close(true);
+                emailStore.close();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            } catch (Exception e ){
+                e.printStackTrace();
             }
-            inbox.close(true);
-            emailStore.close();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (Exception e ){
-            e.printStackTrace();
-        }
-        return EmailsInList;
+            return EmailsInList;
+        }return Collections.emptyList();
+
     }
 
     private String getDate(long time){

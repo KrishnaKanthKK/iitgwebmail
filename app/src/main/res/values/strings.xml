@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">IITG Webmail</string>
+    <string name="title_activity_main">Inbox</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="button_text_less"><![CDATA[<]]></string>
+    <string name="action_settings">Settings</string>
+</resources>

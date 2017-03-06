@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Servers_array">
+        <item>Teesta</item>
+        <item>Naambor</item>
+        <item>Disang</item>
+        <item>Tamdil</item>
+        <item>Dikrong</item>
+    </string-array>
+</resources>

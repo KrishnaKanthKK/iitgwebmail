@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "589448601799",
+    "firebase_url": "https://iitgwebmailnotifier-fe2d6.firebaseio.com",
+    "project_id": "iitgwebmailnotifier-fe2d6",
+    "storage_bucket": "iitgwebmailnotifier-fe2d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589448601799:android:57f5ef4080ed0331",
+        "android_client_info": {
+          "package_name": "com.abc.iitgwebmailnotifier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589448601799-01m9njut3jbeggad2leh3s4aia6flolt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnXSHJPs6V3jvv_rlFGdVX8rxUlCcJRmU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/move"
+        android:orderInCategory="100"
+        android:title="Move to"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/copy"
+        android:orderInCategory="200"
+        android:title="Copy to"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/deleteFolder"
+        android:orderInCategory="300"
+        android:title="Delete Folder"
+        app:showAsAction="never"
+        android:visible="false"/>
+
+
+    <item
+        android:id="@+id/delete"
+        android:orderInCategory="300"
+        android:title="User"
+        android:icon="@drawable/ic_delete_white_24dp"
+        app:showAsAction="ifRoom"></item>
+
+</menu>

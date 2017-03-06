@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.abc.iitgwebmailnotifier.Activities.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+    <LinearLayout
+        android:id="@+id/linear_top"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <LinearLayout
+            android:id="@+id/linear_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textview_mail_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="1-50 of 450"
+            android:gravity="center"
+            android:textColor="@color/black"/>
+        <Button
+            android:id="@+id/button_lessthan"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="@string/button_text_less"
+            android:clickable="true"
+            android:backgroundTint="@color/colorTheme"
+            android:textColor="@color/white"
+            style="?android:textAppearanceSmall"
+            />
+        <Button
+            android:id="@+id/button_greaterthan"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text=">"
+            android:clickable="true"
+            android:backgroundTint="@color/colorTheme"
+            android:textColor="@color/white"
+            style="?android:textAppearanceSmall"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/switchButton"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Switch to WebView"
+            android:clickable="true"
+            android:backgroundTint="@color/colorTheme"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/linear_top"
+        android:id="@+id/line"
+        android:background="@color/DarkGrey"/>
+
+    <FrameLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:layout_below="@+id/line">
+     <android.support.v4.widget.SwipeRefreshLayout
+         android:id="@+id/pulldownswipe"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+         <android.support.v7.widget.RecyclerView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:id="@+id/recycler_inbox"/>
+     </android.support.v4.widget.SwipeRefreshLayout>
+
+     <ProgressBar
+         android:layout_width="wrap_content"
+         android:id="@+id/progressBar_recycler"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:visibility="visible"/>
+     <WebView
+         android:id="@+id/webview_main"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:visibility="gone">
+
+     </WebView>
+ </FrameLayout>
+
+</RelativeLayout>

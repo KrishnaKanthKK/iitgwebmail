@@ -6,10 +6,21 @@ package com.abc.iitgwebmailnotifier.models;
 
 public class Body {
     private String Content;
+
     private boolean html=false;
+
+    private String recipients;
 
     public String getContent() {
         return Content;
+    }
+
+    public String getRecipients() {
+        return recipients;
+    }
+
+    public void setRecipients(String recipients) {
+        this.recipients = recipients;
     }
 
     public void setContent(String content) {

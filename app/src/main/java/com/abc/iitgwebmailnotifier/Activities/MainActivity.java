@@ -303,10 +303,7 @@ public class MainActivity extends AppCompatActivity
                 new loadRecentMails(MainActivity.this, username, password, server,
                         activeFolder,mailSet,"oncreate").execute();
                 Log.e("dsa","adsjkads");
-                POP3ssl pop3ssl = new POP3ssl();
-                folderNames = pop3ssl.getFolderNames(username, password, server);
-                Log.e("foldernames", String.valueOf(folderNames));
-                populateNavigationFolderItemsExtra(folderNames,subMenu);
+
             }
         }).start();
 
@@ -696,28 +693,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void populateWebView(){
-        webView.setVisibility(View.VISIBLE);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
-        webView.loadUrl("https://webmail.iitg.ernet.in/src/login.php?secure_login=yes");
-        webView.requestFocus(View.FOCUS_DOWN);
+        webView.loadUrl("https://webmail.iitg.ernet.in/src/login.php");
 
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                getProgressBar().setVisibility(View.VISIBLE);
                 view.getSettings().setLoadWithOverviewMode(true);
                 view.getSettings().setUseWideViewPort(true);
+
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.e("test","test");
+                Log.e("test",view.getUrl());
+                getProgressBar().setVisibility(View.INVISIBLE);
+                webView.setVisibility(View.VISIBLE);
+                view.requestFocus(View.FOCUS_DOWN);
+
                 view.loadUrl("javascript:var uselessvar1 = document.getElementsByName('login_username')[0].value = '"+username+"';" +
                         "var uselessvar =document.getElementsByName('secretkey')[0].value='"+password+"';");
-                if (view.getUrl().equals("https://webmail.iitg.ernet.in/src/login.php?secure_login=yes")){
+                if (view.getUrl().equals("https://webmail.iitg.ernet.in/src/login.php")){
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 }

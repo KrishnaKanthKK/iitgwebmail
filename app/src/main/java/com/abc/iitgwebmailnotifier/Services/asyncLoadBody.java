@@ -78,6 +78,7 @@ public class asyncLoadBody extends AsyncTask<Object, Object, Body> {
         activity.getProgressBar().setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
         //delegate.processFinish(response);
+        activity.getRecipients().setText("to: "+response.getRecipients());
         TextView body = activity.getBody();
         String bodyPart = response.getContent();
         if (response.isHtml()){

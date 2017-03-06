@@ -12,8 +12,10 @@ import com.abc.iitgwebmailnotifier.Activities.MainActivity;
 import com.abc.iitgwebmailnotifier.Adapters.RecyclerAdapter;
 import com.abc.iitgwebmailnotifier.Services.POP3ssl;
 import com.abc.iitgwebmailnotifier.Services.asyncDeleteFolder;
+import com.abc.iitgwebmailnotifier.Services.asyncGetFolders;
 import com.abc.iitgwebmailnotifier.models.Email;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,7 +122,8 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
                     }
                 }
             }
-        }else if (callerType.equals("greaterbutton")||callerType.equals("lessbutton")){
+        }else if (callerType.equals("oncreate")){
+            new asyncGetFolders(activity,username,password,server).execute();
         }
 
     }

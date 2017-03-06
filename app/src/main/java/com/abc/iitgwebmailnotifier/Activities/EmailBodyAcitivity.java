@@ -36,7 +36,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 
 public class EmailBodyAcitivity extends AppCompatActivity {
-    private TextView subject,from,time,body;
+    private TextView subject,from,recipients,time,body;
 
     private String content = "";
 
@@ -68,6 +68,10 @@ public class EmailBodyAcitivity extends AppCompatActivity {
         return body;
     }
 
+    public TextView getRecipients() {
+        return recipients;
+    }
+
     @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,7 @@ public class EmailBodyAcitivity extends AppCompatActivity {
 
         subject = (TextView) findViewById(R.id.subject_in_body_activity);
         from = (TextView) findViewById(R.id.frm_in_body_activity);
+        recipients = (TextView) findViewById(R.id.recipients);
         time = (TextView) findViewById(R.id.time);
         body = (TextView) findViewById(R.id.body);
         webView = (WebView) findViewById(R.id.webview);

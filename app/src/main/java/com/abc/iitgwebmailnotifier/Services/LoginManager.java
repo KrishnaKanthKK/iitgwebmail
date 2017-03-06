@@ -72,6 +72,9 @@ public class LoginManager extends AsyncTask<Void, Void, String> {
             intent.putExtra("callerType","login");
             activity.startActivity(intent);
             activity.finish();
+        }else if (response.equals("Refused")){
+            activity.getSignInButton().setEnabled(true);
+            Snackbar.make(activity.getLoginform(), "Error Signing in! Connect to Local Network & try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 }

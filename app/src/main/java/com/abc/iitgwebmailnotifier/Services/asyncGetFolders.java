@@ -1,6 +1,7 @@
 package com.abc.iitgwebmailnotifier.Services;
 
 import android.os.AsyncTask;
+import android.view.SubMenu;
 import android.widget.Toast;
 
 import com.abc.iitgwebmailnotifier.Activities.MainActivity;
@@ -42,7 +43,10 @@ public class asyncGetFolders extends AsyncTask<Object, Object, List<String>> {
 
     protected void onPostExecute(List<String> response) {
         if (!response.isEmpty()){
-            activity.populateNavigationFolderItemsExtra(response,activity.getSubMenu());
+            SubMenu subMenu = activity.getSubMenu();
+            subMenu.clear();
+            activity.populateNavigationFolderItems(subMenu);
+            activity.populateNavigationFolderItemsExtra(response,subMenu);
         }else{
             Toast.makeText(activity.getApplicationContext(), "Error in Fetching Folders",
                     Toast.LENGTH_SHORT).show();

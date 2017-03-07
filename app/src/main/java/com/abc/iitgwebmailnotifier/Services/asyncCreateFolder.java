@@ -52,7 +52,6 @@ public class asyncCreateFolder extends AsyncTask<Object, Object, String> {
         if (response == "OK"){
             Toast.makeText(activity.getApplicationContext(), "Created Successfully",
                     Toast.LENGTH_SHORT).show();
-            activity.getSubMenu().add(FolderName).setIcon(R.drawable.ic_folder_white_24dp);
         }else{
             Toast.makeText(activity.getApplicationContext(), "Error Creating Folder",
                     Toast.LENGTH_SHORT).show();

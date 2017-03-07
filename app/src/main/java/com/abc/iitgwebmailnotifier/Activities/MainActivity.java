@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout linearFilter;
     public static int mailSet = 1;
     public List<String> folderNames = new ArrayList<>();
+    public TextView ErrorText;
 
 
     public ProgressBar getProgressBar() {
@@ -156,6 +157,10 @@ public class MainActivity extends AppCompatActivity
         return subMenu;
     }
 
+    public TextView getErrorText() {
+        return ErrorText;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +192,7 @@ public class MainActivity extends AppCompatActivity
         greaterButton = (Button) findViewById(R.id.button_greaterthan);
         mailFilter =(TextView) findViewById(R.id.textview_mail_filter);
         linearFilter = (LinearLayout) findViewById(R.id.linear_filter);
+        ErrorText = (TextView) findViewById(R.id.error_text);
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +202,7 @@ public class MainActivity extends AppCompatActivity
                     mRecyclerView.setVisibility(View.VISIBLE);
                     switchButton.setText("Switch to Webview");
                 }else {
+                    getErrorText().setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.GONE);
                     populateWebView();
                     switchButton.setText("Switch to Normal");
@@ -264,8 +271,6 @@ public class MainActivity extends AppCompatActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -278,8 +283,6 @@ public class MainActivity extends AppCompatActivity
         navHeaderUsername.setText(username + "@iitg.ernet.in");
         Menu m = navigationView.getMenu();
         subMenu = m.addSubMenu("Folders");
-
-        populateNavigationFolderItems(subMenu);
 
         navigationView.setNavigationItemSelectedListener(this);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -544,7 +547,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void populateNavigationFolderItems(SubMenu s){
+    public void populateNavigationFolderItems(SubMenu s){
 
         s.add("Create Folder").setIcon(R.drawable.ic_create_new_folder_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -564,9 +567,12 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("Create",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        List<String> foldernames = new ArrayList<>();
                                         String foldername = userInput.getText().toString();
                                         if (!foldername.equals("")) {
                                             new asyncCreateFolder(MainActivity.this, username, password, server, foldername).execute();
+                                            foldernames.add(foldername);
+                                            populateNavigationFolderItemsExtra(foldernames,getSubMenu());
                                             dialog.cancel();
                                         }
                                     }
@@ -610,15 +616,19 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-    public void populateNavigationFolderItemsExtra(List<String> folderNames,SubMenu s){
+    public void populateNavigationFolderItemsExtra(final List<String> folderNames, SubMenu s){
         for (final String name : folderNames) {
             if (!(name.equals("Sent") || name.equals("INBOX"))) {
                 s.add(name).setIcon(R.drawable.ic_folder_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         mailSet =1;
+                        String caller = "navigation";
+                        if (folderNames.size()==1){
+                            caller = "create";
+                        }
                         new loadRecentMails(MainActivity.this, username, password, server
-                                , name,mailSet,"navigation").execute();
+                                , name,mailSet,caller).execute();
                         activeFolder = name;
                         MainActivity.this.setTitle(name);
                         return false;
@@ -718,14 +728,26 @@ public class MainActivity extends AppCompatActivity
 
                 view.loadUrl("javascript:var uselessvar1 = document.getElementsByName('login_username')[0].value = '"+username+"';" +
                         "var uselessvar =document.getElementsByName('secretkey')[0].value='"+password+"';");
-                if (view.getUrl().equals("https://webmail.iitg.ernet.in/src/login.php")){
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                try {
+                    if (view.getUrl().equals("https://webmail.iitg.ernet.in/src/login.php")){
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 }
 
 

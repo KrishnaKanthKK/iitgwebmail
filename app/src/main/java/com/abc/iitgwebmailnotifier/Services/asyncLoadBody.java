@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.abc.iitgwebmailnotifier.Activities.EmailBodyAcitivity;
 import com.abc.iitgwebmailnotifier.models.Body;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by aarkay0602 on 16/2/17.
  */
@@ -78,7 +81,17 @@ public class asyncLoadBody extends AsyncTask<Object, Object, Body> {
         activity.getProgressBar().setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
         //delegate.processFinish(response);
-        activity.getRecipients().setText("to: "+response.getRecipients());
+        String recipientString = "to: ";
+        List<String> recipients = new ArrayList<>();
+        recipients = response.getRecipients();
+        for (String s : recipients){
+            if (recipients.indexOf(s)!=recipients.size()-1){
+                recipientString += s +", ";
+            }else {
+                recipientString += s + ".";
+            }
+        }
+        activity.getRecipients().setText(recipientString);
         TextView body = activity.getBody();
         String bodyPart = response.getContent();
         if (response.isHtml()){

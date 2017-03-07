@@ -16,6 +16,7 @@ import com.abc.iitgwebmailnotifier.Services.asyncGetFolders;
 import com.abc.iitgwebmailnotifier.models.Email;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,6 +64,7 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
             activity.getmRecyclerView().setVisibility(View.GONE);
             activity.getSwipeRefreshLayout().setEnabled(false);
         }
+        activity.getErrorText().setVisibility(View.INVISIBLE);
         Log.e("pre","pre");
     }
 
@@ -79,6 +81,18 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
             activity.getmRecyclerView().setVisibility(View.VISIBLE);
             activity.getSwipeRefreshLayout().setEnabled(true);
         }
+        try {
+            if (response.get(0).getFrom().equals("networkerror")){
+                Log.e("error","error");
+                activity.getErrorText().setVisibility(View.VISIBLE);
+                activity.getSwipeRefreshLayout().setRefreshing(false);
+                activity.getmRecyclerView().setVisibility(View.INVISIBLE);
+                return;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         activity.getSwipeRefreshLayout().setRefreshing(false);
         RecyclerAdapter recyclerAdapter;
         RecyclerView recyclerView;
@@ -86,6 +100,7 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
         subMenu = activity.getSubMenu();
         recyclerAdapter = activity.getmRecyclerAdapter();
         recyclerView = activity.getmRecyclerView();
+        recyclerView.setVisibility(View.VISIBLE);
         recyclerAdapter = new RecyclerAdapter(activity.getApplicationContext(),activity.getActiveFolder(),response);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity.getApplicationContext()));
@@ -102,27 +117,9 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
         }catch (Exception e){
             e.printStackTrace();
         }
-        if (callerType.equals("pulldown")){
-            if (activity.getSubMenu().size() == 3){
-                Log.e("size", String.valueOf(activity.getSubMenu().size()));
-                POP3ssl pop3ssl = new POP3ssl();
-                for (final String name : pop3ssl.getFolderNames(username, password, server)) {
-                    if (!(name.equals("Sent") || name.equals("INBOX"))) {
-                        subMenu.add(name).setIcon(R.drawable.ic_folder_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                MainActivity.mailSet =1;
-                                new loadRecentMails(activity, username, password
-                                        ,server, name,MainActivity.mailSet,"navigation").execute();
-                                activity.setActiveFolder(name);
-                                activity.setTitle(name);
-                                return false;
-                            }
-                        });
-                    }
-                }
-            }
-        }else if (callerType.equals("oncreate")){
+        
+        if (callerType.equals("oncreate")||callerType.equals("create")
+                ||callerType.equals("pulldown")){
             new asyncGetFolders(activity,username,password,server).execute();
         }
 

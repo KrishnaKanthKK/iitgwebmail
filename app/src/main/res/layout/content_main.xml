@@ -94,11 +94,13 @@
          android:focusable="true">
      </WebView>
      <TextView
-         android:layout_width="wrap_content"
+         android:id="@+id/error_text"
+         android:layout_width="250dp"
          android:layout_height="wrap_content"
-         android:text="Error Connecting to Local Network"
+         android:text="Error in Fetching Emails!! Connect to Local Network and try again"
          android:layout_gravity="center_horizontal"
          android:layout_marginTop="150dp"
+         android:textAlignment="center"
          android:visibility="gone"
          />
  </FrameLayout>

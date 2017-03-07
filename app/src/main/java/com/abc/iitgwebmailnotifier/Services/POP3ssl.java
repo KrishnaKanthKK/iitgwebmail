@@ -204,7 +204,9 @@ public class POP3ssl {
                 }
                 Message message = inbox.getMessageByUID(UID);
                 Address[] recipients = message.getRecipients(Message.RecipientType.TO);
-                body.setRecipients(recipients[0].toString());
+                for (Address address: recipients){
+                    body.addRecipient(address.toString());
+                }
                 Object msgContent = message.getContent();
                 content = "";
      /* Check if content is pure text/html or in parts */
@@ -340,7 +342,10 @@ public class POP3ssl {
                 e.printStackTrace();
             }
             return EmailsInList;
-        }return Collections.emptyList();
+        }Email email = new Email();
+        email.setFrom("networkerror");
+        EmailsInList.add(email);
+        return EmailsInList;
 
     }
 

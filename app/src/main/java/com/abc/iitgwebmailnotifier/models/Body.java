@@ -1,5 +1,8 @@
 package com.abc.iitgwebmailnotifier.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by aarkay0602 on 4/3/17.
  */
@@ -9,17 +12,21 @@ public class Body {
 
     private boolean html=false;
 
-    private String recipients;
+    private List<String> recipients= new ArrayList<>();
 
     public String getContent() {
         return Content;
     }
 
-    public String getRecipients() {
+    public List<String> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(String recipients) {
+    public void addRecipient(String recipient){
+        this.recipients.add(recipient);
+    }
+
+    public void setRecipients(List<String> recipients) {
         this.recipients = recipients;
     }
 

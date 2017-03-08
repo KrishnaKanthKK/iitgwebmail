@@ -102,11 +102,11 @@
 
                 <Button
                     android:id="@+id/signInButton"
-                    style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Login"
                     android:clickable="true"
+                    style="?android:textAppearanceSmall"
                     android:backgroundTint="@color/colorTheme"
                     android:textColor="@color/white"
                     android:textStyle="bold" />

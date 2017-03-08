@@ -2,6 +2,7 @@ package com.abc.iitgwebmailnotifier.Firebase;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
  * Created by aarkay0602 on 26/1/17.

@@ -4,7 +4,7 @@
     android:id="@+id/activity_email_body"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="64dp"
+    android:paddingTop="62dp"
     tools:context="com.abc.iitgwebmailnotifier.Activities.EmailBodyAcitivity">
     <ScrollView
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:textStyle="bold"
         android:fontFamily="sans-serif-thin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:layout_marginBottom="15dp"
         />
     <TextView

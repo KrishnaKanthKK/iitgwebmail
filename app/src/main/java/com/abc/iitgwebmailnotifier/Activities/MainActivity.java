@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (mRecyclerView.getVisibility()==View.GONE){
+                    getErrorText().setVisibility(View.GONE);
                     webView.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                     switchButton.setText("Switch to Webview");
@@ -420,6 +421,9 @@ public class MainActivity extends AppCompatActivity
             // show it
             alertDialog.show();
 
+        }else if (id == R.id.notification){
+            Intent i = new Intent(MainActivity.this,SendNotificationActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -77,28 +77,29 @@ public class asyncLoadBody extends AsyncTask<Object, Object, Body> {
     }
 
     protected void onPostExecute(Body response) {
-        webView = activity.getWebView();
-        activity.getProgressBar().setVisibility(View.GONE);
-        webView.setVisibility(View.VISIBLE);
-        //delegate.processFinish(response);
-        String recipientString = "to: ";
-        List<String> recipients = new ArrayList<>();
-        recipients = response.getRecipients();
-        for (String s : recipients){
-            if (recipients.indexOf(s)!=recipients.size()-1){
-                recipientString += s +", ";
-            }else {
-                recipientString += s + ".";
-            }
-        }
-        activity.getRecipients().setText(recipientString);
-        TextView body = activity.getBody();
-        String bodyPart = response.getContent();
-        if (response.isHtml()){
-            body.setVisibility(View.GONE);
+        try {
+            webView = activity.getWebView();
+            activity.getProgressBar().setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
-            webView.loadData(bodyPart, "text/html", null);
-            Log.e("web","web");
+            //delegate.processFinish(response);
+            String recipientString = "to: ";
+            List<String> recipients = new ArrayList<>();
+            recipients = response.getRecipients();
+            for (String s : recipients){
+                if (recipients.indexOf(s)!=recipients.size()-1){
+                    recipientString += s +", ";
+                }else {
+                    recipientString += s + ".";
+                }
+            }
+            activity.getRecipients().setText(recipientString);
+            TextView body = activity.getBody();
+            String bodyPart = response.getContent();
+            if (response.isHtml()){
+                body.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+                webView.loadData(bodyPart, "text/html", null);
+                Log.e("web","web");
             /*    body.setAutoLinkMask(0);
             body.setMovementMethod(LinkMovementMethod.getInstance());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
@@ -107,11 +108,15 @@ public class asyncLoadBody extends AsyncTask<Object, Object, Body> {
                 body.setText(Html.fromHtml(bodyPart));
             }
         */}else{
-            webView.setVisibility(View.GONE);
-            Log.e("plain","plain");
-            body.setVisibility(View.VISIBLE);
-            body.setText(bodyPart);
+                webView.setVisibility(View.GONE);
+                Log.e("plain","plain");
+                body.setVisibility(View.VISIBLE);
+                body.setText(bodyPart);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
     private boolean isHtml(String bodyPart){
         boolean b = false;

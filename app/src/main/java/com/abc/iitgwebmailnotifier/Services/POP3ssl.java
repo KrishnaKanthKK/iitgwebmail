@@ -243,7 +243,11 @@ public class POP3ssl {
             Log.e("5","5");
             return body;
         }else{
-            body.setContent("error");
+            try {
+                body.setContent("error");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             Log.e("6","6");
             return body;
         }

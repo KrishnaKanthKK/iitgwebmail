@@ -24,7 +24,7 @@
             android:id="@+id/textview_mail_filter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="1-50 of 450"
+            android:text="1-50 of     "
             android:gravity="center"
             android:textColor="@color/black"/>
         <Button

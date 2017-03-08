@@ -7,4 +7,10 @@
         <item>Tamdil</item>
         <item>Dikrong</item>
     </string-array>
+    <string-array name="Departments_array">
+        <item>Single device</item>
+        <item>EEE</item>
+        <item>ECE</item>
+        <item>CSE</item>
+    </string-array>
 </resources>

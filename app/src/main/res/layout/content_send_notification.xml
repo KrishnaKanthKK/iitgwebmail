@@ -12,20 +12,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/subscribe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Subscribe to notifications"
-            android:clickable="true"
-            style="?android:textAppearanceSmall"
-            android:backgroundTint="@color/colorTheme"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            />
+        <RelativeLayout
+            android:id="@+id/relative_subscribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subscribe to notifications"
+                android:clickable="true"
+                android:layout_alignParentLeft="true"
+                style="?android:textAppearanceSmall"
+                android:backgroundTint="@color/colorTheme"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+            <Button
+                android:id="@+id/unsubscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unsubscribe"
+                android:clickable="true"
+                android:layout_alignParentRight="true"
+                style="?android:textAppearanceSmall"
+                android:backgroundTint="@color/colorTheme"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+
         <TextView
             android:layout_marginTop="15dp"
-            android:layout_below="@+id/subscribe"
+            android:layout_below="@+id/relative_subscribe"
             android:id="@+id/from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,8 +95,52 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/linear_multidevice"
+            android:layout_below="@id/linear_webmail_id"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/radioGroup"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B.tech"
+                    android:id="@+id/btech"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M.Tech"
+                    android:id="@+id/mtech"
+                    android:checked="false"/>
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/batch"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Batch"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:maxLines="1" />
+                <requestFocus />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linear_message"
-            android:layout_below="@+id/linear_webmail_id"
+            android:layout_below="@+id/linear_multidevice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

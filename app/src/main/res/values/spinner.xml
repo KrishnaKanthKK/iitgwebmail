@@ -13,4 +13,9 @@
         <item>ECE</item>
         <item>CSE</item>
     </string-array>
+    <string-array name="Subscribe_array">
+        <item>EEE</item>
+        <item>ECE</item>
+        <item>CSE</item>
+    </string-array>
 </resources>

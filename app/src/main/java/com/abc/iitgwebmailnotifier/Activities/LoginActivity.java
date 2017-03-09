@@ -90,6 +90,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
             @Override
             public void onClick(View v) {
                 signInButton.setEnabled(false);
+
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         }
+
         swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.pulldownswipe);
         preferences = getSharedPreferences(UserSessionManager.PREFER_NAME, getApplicationContext().MODE_PRIVATE);
         username = preferences.getString(UserSessionManager.KEY_USERNAME, "");
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity
                 }else {
                     getErrorText().setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.GONE);
+                    MainActivity.this.setTitle("Webview");
                     populateWebView();
                     switchButton.setText("Switch to Normal");
                 }
@@ -217,7 +219,6 @@ public class MainActivity extends AppCompatActivity
                     mailSet--;
                     new loadRecentMails(MainActivity.this, username, password, server,
                             activeFolder,mailSet,"lessbutton").execute();
-
                 }
             }
         });

@@ -53,7 +53,7 @@ public class LoginManager extends AsyncTask<Void, Void, String> {
         activity.getProgressBar().setVisibility(View.GONE);
         activity.getSignInButton().setVisibility(View.VISIBLE);
 
-        if(response.equals("FAILED")){
+        if(response.equals("Failed")){
             activity.getSignInButton().setEnabled(true);
             Snackbar.make(activity.getLoginform(), "Error Signing in! Please try again.", Snackbar.LENGTH_LONG).show();
             return;
@@ -76,5 +76,6 @@ public class LoginManager extends AsyncTask<Void, Void, String> {
             activity.getSignInButton().setEnabled(true);
             Snackbar.make(activity.getLoginform(), "Error Signing in! Connect to Local Network & try again.", Snackbar.LENGTH_LONG).show();
         }
+
     }
 }

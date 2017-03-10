@@ -26,6 +26,7 @@ import com.abc.iitgwebmailnotifier.Services.JSONSerializer;
 import com.abc.iitgwebmailnotifier.Services.UserSessionManager;
 import com.abc.iitgwebmailnotifier.Services.asyncCreateFolder;
 import com.abc.iitgwebmailnotifier.Services.asyncSendNotification;
+import com.abc.iitgwebmailnotifier.Services.asyncSingleDevice;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -107,21 +108,31 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
+                String recipient = webmailId.getText().toString();
                 String messageText = message.getText().toString();
-                int batch_number = Integer.parseInt(batch.getText().toString());
+
                 if (department.equals("Single device")){
+                    if (!messageText.equals("") && !recipient.equals("")){
+                        new asyncSingleDevice(SendNotificationActivity.this,username,recipient,messageText).execute();
+                    }
 
                 }else{
-                    if (batch_number > MIN_BATCH_NUMBER && batch_number < 2017){
-                        int radio_id = radioGroup.getCheckedRadioButtonId();
-                        RadioButton radioButton = (RadioButton) findViewById(radio_id);
-                        String radioText = radioButton.getText().toString();
-                        new asyncSendNotification(SendNotificationActivity.this,username,messageText,department+batch_number+radioText).execute();
-                    }else {
-                        Toast.makeText(getApplicationContext(), "Only batch numbers between 2004 to 2017 are allowed",
-                                Toast.LENGTH_SHORT).show();
+                    try {
+                        int batch_number = Integer.parseInt(batch.getText().toString());
+                        if (batch_number > MIN_BATCH_NUMBER && batch_number < 2017){
+                            int radio_id = radioGroup.getCheckedRadioButtonId();
+                            RadioButton radioButton = (RadioButton) findViewById(radio_id);
+                            String radioText = radioButton.getText().toString();
+                            new asyncSendNotification(SendNotificationActivity.this,username,messageText,department+batch_number+radioText).execute();
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Only batch numbers between 2004 to 2017 are allowed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
+
 
                 }
             }
@@ -158,6 +169,7 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
 
                 // set dialog message
                 alertDialogBuilder
+                        .setCancelable(false)
                         .setTitle("Subscribe to")
                         .setPositiveButton("subscribe",
                                 new DialogInterface.OnClickListener() {
@@ -183,7 +195,7 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
 
                                         }else {
                                             {
-                                                Toast.makeText(getApplicationContext(), "Only batch numbers between 2004 to 2017 are allowed",
+                                                Toast.makeText(getApplicationContext(), "Only batch numbers between 2004-2017 are allowed",
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         }

@@ -84,7 +84,9 @@ public class loadRecentMails extends AsyncTask<Object, Object, List<Email>> {
         try {
             if (response.get(0).getFrom().equals("networkerror")){
                 Log.e("error","error");
-                activity.getErrorText().setVisibility(View.VISIBLE);
+                if (!activity.getSwitchButton().getText().toString().equals("Switch to Normal")){
+                    activity.getErrorText().setVisibility(View.VISIBLE);
+                }
                 activity.getSwipeRefreshLayout().setRefreshing(false);
                 activity.getmRecyclerView().setVisibility(View.INVISIBLE);
                 return;

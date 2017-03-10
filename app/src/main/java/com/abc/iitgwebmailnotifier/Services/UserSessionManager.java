@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import com.abc.iitgwebmailnotifier.Activities.LoginActivity;
 import com.abc.iitgwebmailnotifier.models.User;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -22,6 +23,8 @@ public class UserSessionManager {
 
     Context context;
 
+    String token = FirebaseInstanceId.getInstance().getToken();
+    String username;
 
     public static final String PREFER_NAME = "SharedPreferences";
 
@@ -37,6 +40,7 @@ public class UserSessionManager {
         this.context = context;
         preferences = context.getSharedPreferences(PREFER_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
+        username = getUserDetails(context).get(KEY_USERNAME);
     }
 
     public void createUserLoginSession(User user){
@@ -54,8 +58,14 @@ public class UserSessionManager {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+
+            new asyncSendToken(username,token,"false").execute();
+
             return true;
         }
+
+        new asyncSendToken(username,token,"true").execute();
+
         return false;
     }
 
@@ -63,8 +73,10 @@ public class UserSessionManager {
         return preferences.getBoolean(IS_USER_LOGIN, false);
     }
 
-    public HashMap<String, String> getUserDetails(){
+    public HashMap<String, String> getUserDetails(Context context){
         HashMap<String, String> user = new HashMap<>();
+        preferences = context.getSharedPreferences(PREFER_NAME, Context.MODE_PRIVATE);
+        editor = preferences.edit();
         user.put(KEY_USERNAME, preferences.getString(KEY_USERNAME, null));
         user.put(KEY_PASSWORD, preferences.getString(KEY_PASSWORD, null));
         user.put(KEY_SERVER, preferences.getString(KEY_SERVER, null));
@@ -73,6 +85,8 @@ public class UserSessionManager {
 
     public void logoutUser(){
 
+        new asyncSendToken(username,token,"false").execute();
+
         editor.clear();
         editor.commit();
 
@@ -80,6 +94,7 @@ public class UserSessionManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+
 //        FirebaseRegisterAPIClient.getInstance().registerToken(credentials,false);
 
     }

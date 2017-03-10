@@ -145,6 +145,10 @@ public class MainActivity extends AppCompatActivity
         return mRecyclerAdapter;
     }
 
+    public Button getSwitchButton() {
+        return switchButton;
+    }
+
     public TextView getMailFilter() {
         return mailFilter;
     }

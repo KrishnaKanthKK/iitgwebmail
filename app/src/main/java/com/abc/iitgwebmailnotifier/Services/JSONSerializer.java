@@ -28,6 +28,19 @@ public class JSONSerializer {
         return user;
     }
 
+    public String createJSONforSingleMessage(String sender,String recipient,String message){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username",sender);
+            jsonObject.put("recipient",recipient);
+            jsonObject.put("message",message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Failed";
+        }
+        return jsonObject.toString();
+    }
+
     public String createJSONforTopicMessage(String topic,String message,String from){
         JSONObject jsonObject =new JSONObject();
         JSONObject data = new JSONObject();
@@ -40,8 +53,21 @@ public class JSONSerializer {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            return "Failed";
         }
         Log.e("json",jsonObject.toString());
+        return jsonObject.toString();
+    }
+    public String createJSONforSendingToken(String user,String token,String active){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username",user);
+            jsonObject.put("token",token);
+            jsonObject.put("active",active);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Failed";
+        }
         return jsonObject.toString();
     }
 

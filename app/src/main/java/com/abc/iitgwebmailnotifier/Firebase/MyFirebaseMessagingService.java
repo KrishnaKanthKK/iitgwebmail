@@ -32,6 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.e("resp",remoteMessage.getData().toString());
         String title ="From : "+ remoteMessage.getData().get("sender")+"   To : " +remoteMessage.getData().get("recipients");
         String message = remoteMessage.getData().get("message");
         if (Build.VERSION.SDK_INT >= 24){
@@ -77,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         return new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_done_all_black_24dp)
+                .setSmallIcon(R.drawable.ic_notifications_white_24dp)
                 .setContentTitle(title)
                 .setSound(defaultSoundUri)
                 .setLargeIcon(largeIcon)

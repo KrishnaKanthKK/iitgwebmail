@@ -2,26 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="35dp"
     android:id="@+id/parentLinearlayout">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="34.5dp"
         android:orientation="horizontal"
         android:id="@+id/linear">
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
         android:checked="false"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -30,15 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="From"
-                android:textSize="18sp"
-                android:paddingLeft="5dp"
-                android:paddingTop="2dp"
-                android:layout_marginTop="10dp"
+                android:textSize="10sp"
+                android:layout_marginTop="4dp"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/black"
-                android:layout_marginLeft="5dp"
-                android:paddingRight="2dp"
-                android:paddingBottom="2dp"
                 android:maxLines="1"
                 android:textStyle="bold"
                 android:ellipsize="end"
@@ -47,18 +44,17 @@
                 android:id="@+id/timestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
+                android:layout_weight="4"
                 android:gravity="right"
                 android:paddingTop="2dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="4dp"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/black"
                 android:paddingRight="2dp"
-                android:paddingBottom="2dp"
                 android:maxLines="1"
                 android:textStyle="bold"
-                android:textSize="12sp"
-                android:text="Feb 21"
+                android:textSize="6sp"
+                android:text="10:30 AM"
                 android:layout_alignParentRight="true"/>
         </LinearLayout>
         <RelativeLayout
@@ -67,23 +63,19 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/textview_subject"
-                android:layout_width="340dp"
+                android:layout_width="145dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="2dp"
-                android:paddingRight="2dp"
-                android:paddingBottom="2dp"
-                android:textSize="15sp"
+                android:paddingRight="1dp"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:text="subject"/>
 
             <ImageView
                 android:id="@+id/tick_image"
                 android:layout_alignParentRight="true"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:src="@drawable/ic_done_black_24dp"
                 />
         </RelativeLayout>
@@ -93,7 +85,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@id/linear"
         android:id="@+id/line"
         android:background="@color/DarkGrey"/>

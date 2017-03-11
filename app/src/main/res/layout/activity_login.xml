@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorTheme"
             android:layout_marginTop="60dp"
-            android:textSize="40dp"
+            android:textSize="40sp"
             android:text="IITG Webmail"
             android:textAlignment="center"/>
 

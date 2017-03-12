@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -52,6 +53,7 @@ import com.abc.iitgwebmailnotifier.BuildConfig;
 import com.abc.iitgwebmailnotifier.R;
 import com.abc.iitgwebmailnotifier.Adapters.RecyclerAdapter;
 import com.abc.iitgwebmailnotifier.Services.POP3ssl;
+import com.abc.iitgwebmailnotifier.Services.TaskCanceler;
 import com.abc.iitgwebmailnotifier.Services.UserSessionManager;
 import com.abc.iitgwebmailnotifier.Services.asyncCopyMails;
 import com.abc.iitgwebmailnotifier.Services.asyncCreateFolder;
@@ -81,6 +83,11 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private Handler handler = new Handler();
+    private TaskCanceler taskCanceler;
+
 
     private FirebaseAuth mAuth;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
@@ -306,6 +313,15 @@ public class MainActivity extends AppCompatActivity
             swipeRefreshLayout.setColorSchemeColors(getApplicationContext().getResources().getColor(R.color.colorTheme));
         }
 
+/*
+
+        loadRecentMails task = new loadRecentMails(MainActivity.this, username, password, server,
+                activeFolder,mailSet,"oncreate");
+        taskCanceler = new TaskCanceler(task);
+        handler.postDelayed(taskCanceler, 5*1000);
+        task.execute();
+        Log.e("asklads","h");
+        */
         new Thread(new Runnable() {
             @Override
             public void run() {

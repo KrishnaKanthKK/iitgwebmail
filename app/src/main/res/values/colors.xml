@@ -7,5 +7,6 @@
     <color name="colorTheme">#ff5252</color>
     <color name="secondLevelGrey">#EEEEEE</color>
     <color name="DarkGrey">#4e52524f</color>
+    <color name="Grey">#4c5156</color>
     <color name="white">#FFFFFF</color>
 </resources>

@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 getSwipeRefreshLayout().setRefreshing(false);
+                task.cancel(true);
                 if (mRecyclerView.getVisibility()==View.GONE){
                     getErrorText().setVisibility(View.GONE);
                     webView.setVisibility(View.GONE);
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity
                 task = new loadRecentMails(MainActivity.this, username, password, server,
                         activeFolder,mailSet,"pulldown");
                 taskCanceler = new TaskCanceler(task,MainActivity.this);
-                handler.postDelayed(taskCanceler, 8*1000);
+                handler.postDelayed(taskCanceler, 15*1000);
                 task.execute();
 
             }

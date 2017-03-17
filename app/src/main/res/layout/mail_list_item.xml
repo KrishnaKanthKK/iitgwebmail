@@ -73,7 +73,7 @@
                 android:layout_marginLeft="5dp"
                 android:paddingLeft="5dp"
                 android:paddingTop="2dp"
-
+                android:textColor="@color/DarkGrey"
                 android:paddingRight="2dp"
                 android:paddingBottom="2dp"
                 android:textSize="15sp"

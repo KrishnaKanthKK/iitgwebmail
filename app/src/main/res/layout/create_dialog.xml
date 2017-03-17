@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="Folder Name : "
+        android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText

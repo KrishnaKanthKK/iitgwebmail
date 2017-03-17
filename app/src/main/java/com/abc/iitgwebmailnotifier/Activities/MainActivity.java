@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     private Button switchButton,lessButton,greaterButton;
     private TextView mailFilter;
     private LinearLayout linearFilter;
+    public loadRecentMails task;
     public static int mailSet = 1;
     public List<String> folderNames = new ArrayList<>();
     public TextView ErrorText;
@@ -209,9 +210,11 @@ public class MainActivity extends AppCompatActivity
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getSwipeRefreshLayout().setRefreshing(false);
                 if (mRecyclerView.getVisibility()==View.GONE){
                     getErrorText().setVisibility(View.GONE);
                     webView.setVisibility(View.GONE);
+                    MainActivity.this.setTitle(activeFolder);
                     mRecyclerView.setVisibility(View.VISIBLE);
                     switchButton.setText("Switch to Webview");
                 }else {
@@ -228,8 +231,9 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (mailSet>1){
                     mailSet--;
-                    new loadRecentMails(MainActivity.this, username, password, server,
-                            activeFolder,mailSet,"lessbutton").execute();
+                    task = new loadRecentMails(MainActivity.this, username, password, server,
+                            activeFolder,mailSet,"lessbutton");
+                    task.execute();
                 }
             }
         });
@@ -240,8 +244,9 @@ public class MainActivity extends AppCompatActivity
                 try {
                     if (mailSet < (float) RecyclerAdapter.emails.get(0).getTotalMails()/50){
                         mailSet++;
-                        new loadRecentMails(MainActivity.this, username, password, server,
-                                activeFolder,mailSet,"greaterbutton").execute();
+                        task = new loadRecentMails(MainActivity.this, username, password, server,
+                                activeFolder,mailSet,"greaterbutton");
+                        task.execute();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -302,8 +307,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onRefresh() {
                 mailSet = 1;
-                new loadRecentMails(MainActivity.this,username,password,server
-                        ,activeFolder,mailSet,"pulldown").execute();
+                task = new loadRecentMails(MainActivity.this, username, password, server,
+                        activeFolder,mailSet,"pulldown");
+                taskCanceler = new TaskCanceler(task,MainActivity.this);
+                handler.postDelayed(taskCanceler, 8*1000);
+                task.execute();
+
             }
         });
 
@@ -313,15 +322,15 @@ public class MainActivity extends AppCompatActivity
             swipeRefreshLayout.setColorSchemeColors(getApplicationContext().getResources().getColor(R.color.colorTheme));
         }
 
-/*
 
-        loadRecentMails task = new loadRecentMails(MainActivity.this, username, password, server,
+
+        task = new loadRecentMails(MainActivity.this, username, password, server,
                 activeFolder,mailSet,"oncreate");
-        taskCanceler = new TaskCanceler(task);
-        handler.postDelayed(taskCanceler, 5*1000);
+        taskCanceler = new TaskCanceler(task,MainActivity.this);
+        handler.postDelayed(taskCanceler, 8*1000);
         task.execute();
-        Log.e("asklads","h");
-        */
+
+/*
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -331,7 +340,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         }).start();
-
+*/
         //checkForUpdate();
     }
 
@@ -443,6 +452,8 @@ public class MainActivity extends AppCompatActivity
             alertDialog.show();
 
         }else if (id == R.id.notification){
+            getSwipeRefreshLayout().setRefreshing(false);
+            task.cancel(true);
             Intent i = new Intent(MainActivity.this,SendNotificationActivity.class);
             startActivity(i);
         }
@@ -621,8 +632,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 mailSet = 1;
-                new loadRecentMails(MainActivity.this, username, password,
-                        server, "INBOX",mailSet,"navigation").execute();
+                task = new loadRecentMails(MainActivity.this, username, password,
+                        server, "INBOX",mailSet,"navigation");
+                task.execute();
                 activeFolder = "INBOX";
                 MainActivity.this.setTitle("Inbox");
                 return false;
@@ -632,8 +644,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 mailSet = 1;
-                new loadRecentMails(MainActivity.this, username, password, server,
-                        "Sent",mailSet,"navigation").execute();
+                task =new loadRecentMails(MainActivity.this, username, password, server,
+                        "Sent",mailSet,"navigation");
+                task.execute();
                 activeFolder = "Sent";
                 MainActivity.this.setTitle("Sent");
                 return false;
@@ -652,8 +665,9 @@ public class MainActivity extends AppCompatActivity
                         if (folderNames.size()==1){
                             caller = "create";
                         }
-                        new loadRecentMails(MainActivity.this, username, password, server
-                                , name,mailSet,caller).execute();
+                        task = new loadRecentMails(MainActivity.this, username, password, server
+                                , name,mailSet,caller);
+                        task.execute();
                         activeFolder = name;
                         MainActivity.this.setTitle(name);
                         return false;

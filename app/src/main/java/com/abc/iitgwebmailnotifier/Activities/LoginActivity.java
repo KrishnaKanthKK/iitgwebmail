@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.abc.iitgwebmailnotifier.R;
 import com.abc.iitgwebmailnotifier.Services.LoginManager;
+import com.abc.iitgwebmailnotifier.Services.TaskCanceler;
 import com.abc.iitgwebmailnotifier.Services.UserSessionManager;
 
 import java.util.concurrent.ExecutionException;
@@ -35,6 +37,8 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
     private String POP3server = "";
     private UserSessionManager session;
     private LinearLayout loginform;
+    private LoginManager task;
+    private Handler handler = new Handler();
 
     public LinearLayout getLoginform() {
         return loginform;
@@ -109,7 +113,11 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
                 }
                 String username = email.getText().toString();
                 String pass = password.getText().toString().trim();
-                new LoginManager(LoginActivity.this,username,pass,POP3server).execute();
+                task = new LoginManager(LoginActivity.this,username,pass,POP3server);
+
+                TaskCanceler taskCanceler = new TaskCanceler(task,LoginActivity.this);
+                handler.postDelayed(taskCanceler,12*1000);
+                task.execute();
             }
         });
     }

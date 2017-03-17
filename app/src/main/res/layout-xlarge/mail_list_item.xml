@@ -7,20 +7,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="158dp"
-        android:orientation="horizontal"
-        android:id="@+id/linear">
+        android:orientation="horizontal">
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleX="2.0"
-        android:scaleY="2.0"
+        android:scaleX="1.8"
+        android:scaleY="1.8"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="35dp"
         android:checked="false"
+        android:button="@drawable/customdrawablecheckbox"
+
         />
 
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -74,6 +76,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:paddingLeft="5dp"
+                android:textColor="@color/Grey"
                 android:paddingTop="2dp"
                 android:paddingRight="2dp"
                 android:paddingBottom="2dp"

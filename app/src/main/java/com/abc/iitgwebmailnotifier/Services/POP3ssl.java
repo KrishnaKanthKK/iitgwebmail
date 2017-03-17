@@ -240,6 +240,8 @@ public class POP3ssl {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Exception e ){
+                e.printStackTrace();
             }
             Log.e("5","5");
             return body;

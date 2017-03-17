@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.abc.iitgwebmailnotifier.Activities.LoginActivity;
 import com.abc.iitgwebmailnotifier.Activities.MainActivity;
 
 /**
@@ -14,22 +15,28 @@ import com.abc.iitgwebmailnotifier.Activities.MainActivity;
 
 public class TaskCanceler implements Runnable{
     private AsyncTask task;
-    private MainActivity activity;
+    private Object activity;
 
-    public TaskCanceler(AsyncTask task, MainActivity activity) {
+    public TaskCanceler(AsyncTask task, Object activity) {
         this.activity = activity;
         this.task = task;
     }
 
     @Override
     public void run() {
-        if (task.getStatus() == AsyncTask.Status.RUNNING ){
+        if (task.getStatus() == AsyncTask.Status.RUNNING && activity instanceof MainActivity){
             task.cancel(true);
-            activity.getProgressBar().setVisibility(View.GONE);
-            activity.getErrorText().setVisibility(View.VISIBLE);
-            activity.getSwipeRefreshLayout().setEnabled(true);
-            activity.getSwipeRefreshLayout().setRefreshing(false);
+            ((MainActivity)activity).getProgressBar().setVisibility(View.GONE);
+            ((MainActivity)activity).getErrorText().setVisibility(View.VISIBLE);
+            ((MainActivity)activity).getSwipeRefreshLayout().setEnabled(true);
+            ((MainActivity)activity).getSwipeRefreshLayout().setRefreshing(false);
+        }else if (task.getStatus() == AsyncTask.Status.RUNNING && activity instanceof LoginManager){
+            task.cancel(true);
+            ((LoginActivity)activity).getProgressBar().setVisibility(View.GONE);
+            ((LoginActivity)activity).getSignInButton().setVisibility(View.VISIBLE);
+            ((LoginActivity)activity).getSignInButton().setEnabled(true);
         }
+
 
     }
 }

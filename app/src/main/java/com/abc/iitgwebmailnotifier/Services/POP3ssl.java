@@ -31,6 +31,7 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 
 /**
  * Created by aarkay0602 on 15/2/17.
@@ -321,11 +322,11 @@ public class POP3ssl {
                 int messageCount = inbox.getMessageCount();
                 for (int i = messageCount-1-(mailset-1)*count; i >= (messageCount-count-(mailset-1)*count); i--) {
                     Email email = new Email();
-                    email.setFrom(String.valueOf(messages[i].getFrom()[0]).replaceAll("[\"]",""));
+                    email.setFrom(String.valueOf(MimeUtility.decodeText(
+                            String.valueOf(messages[i].getFrom()[0])).replaceAll("[\"]","")));
                     email.setSubject(messages[i].getSubject());
                     email.setUID(inbox.getUID(messages[i]));
                     email.setSeen(messages[i].isSet(Flags.Flag.SEEN));
-                    Log.e("id", String.valueOf(inbox.getUID(messages[i])));
                     email.setMessageNumber(messages[i].getMessageNumber());
                     email.setSentDate(getDate(messages[i].getSentDate().getTime()));
                     email.setFromFolder(folderName);

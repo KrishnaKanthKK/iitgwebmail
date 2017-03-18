@@ -23,7 +23,8 @@
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="230dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:dropDownSelector="@color/DarkGrey">
         </Spinner>
 
     </LinearLayout>
@@ -40,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="B.tech"
+                android:textColor="@color/black"
                 android:id="@+id/btech"
                 android:checked="true"/>
 
@@ -47,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="M.Tech"
+                android:textColor="@color/black"
                 android:id="@+id/mtech"
                 android:checked="false"/>
         </RadioGroup>

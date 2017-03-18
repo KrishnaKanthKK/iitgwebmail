@@ -70,10 +70,11 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/textview_subject"
-                android:layout_width="340dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="30dp"
                 android:paddingLeft="5dp"
                 android:paddingTop="2dp"
                 android:textColor="@color/Grey"

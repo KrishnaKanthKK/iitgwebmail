@@ -74,8 +74,8 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
         username = preferences.getString(UserSessionManager.KEY_USERNAME, "");
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.Departments_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.Departments_array, R.layout.spinner_item);
+
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -162,8 +162,7 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
                 final RadioGroup radioGroup = (RadioGroup) promptsView.findViewById(R.id.radioGroup);
 
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-                        R.array.Subscribe_array, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        R.array.Subscribe_array, R.layout.spinner_item);
                 spinner1.setAdapter(adapter);
                 spinner1.setOnItemSelectedListener(new OnSpinnerItemClicked());
 

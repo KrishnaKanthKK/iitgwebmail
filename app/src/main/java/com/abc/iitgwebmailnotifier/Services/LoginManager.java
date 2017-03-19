@@ -61,7 +61,7 @@ public class LoginManager extends AsyncTask<Void, Void, String> {
             Log.e("user",username);
             JSONSerializer jsonSerializer = new JSONSerializer();
             User user = jsonSerializer.createUserObject(username,password,server);
-            Log.e("user",username);
+
             activity.getSession().createUserLoginSession(user);
 
             Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);

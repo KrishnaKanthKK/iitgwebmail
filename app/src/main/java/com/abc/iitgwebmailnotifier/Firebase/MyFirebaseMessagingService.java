@@ -32,14 +32,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.e("resp",remoteMessage.getData().toString());
-        String title ="From : "+ remoteMessage.getData().get("sender")+"   To : " +remoteMessage.getData().get("recipients");
-        String message = remoteMessage.getData().get("message");
-        if (Build.VERSION.SDK_INT >= 24){
-            sendNotificationForHIGHERVERSIONS(title,message);
-        }else {
-            sendNotification(title,message);
-        }    }
+        Log.e("resp1",remoteMessage.getData().toString());
+
+        if (remoteMessage.getData().containsKey("message")){
+            Log.e("resp",remoteMessage.getData().toString());
+            String title ="From : "+ remoteMessage.getData().get("sender")+"   To : " +remoteMessage.getData().get("recipients");
+            String message = remoteMessage.getData().get("message");
+            if (Build.VERSION.SDK_INT >= 24){
+                sendNotificationForHIGHERVERSIONS(title,message);
+            }else {
+                sendNotification(title,message);
+            }
+        }else{
+            String title =remoteMessage.getNotification().getTitle();
+            String message = remoteMessage.getNotification().getBody();
+            if (Build.VERSION.SDK_INT >= 24){
+                sendNotificationForHIGHERVERSIONS(title,message);
+            }else {
+                sendNotification(title,message);
+            }
+
+        }
+
+    }
 
 
     private void sendNotification(String title, String message){
@@ -79,11 +94,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notifications_white_24dp)
-                .setContentTitle(title)
                 .setSound(defaultSoundUri)
                 .setLargeIcon(largeIcon)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message))
+                        .bigText(message).setBigContentTitle(title))
+
                 .setContentIntent(pendingIntent)
                 .setColor(ContextCompat.getColor(context, R.color.black))
                 .setAutoCancel(true)

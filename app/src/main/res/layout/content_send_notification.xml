@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginTop="70dp"
     android:padding="10dp">
@@ -16,7 +17,7 @@
             android:id="@+id/relative_subscribe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/subscribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -24,11 +25,11 @@
                 android:clickable="true"
                 android:layout_alignParentLeft="true"
                 style="?android:textAppearanceSmall"
-                android:backgroundTint="@color/colorTheme"
+                app:backgroundTint="@color/colorTheme"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 />
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/unsubscribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +37,7 @@
                 android:clickable="true"
                 android:layout_alignParentRight="true"
                 style="?android:textAppearanceSmall"
-                android:backgroundTint="@color/colorTheme"
+                app:backgroundTint="@color/colorTheme"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:visibility="gone"
@@ -70,7 +71,8 @@
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="270dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.Holo.Light.Spinner">
             </Spinner>
         </LinearLayout>
         <LinearLayout
@@ -164,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp">
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -172,17 +174,17 @@
                 android:textStyle="bold"
                 android:clickable="true"
                 style="?android:textAppearanceSmall"
-                android:backgroundTint="@color/colorTheme"
+                app:backgroundTint="@color/colorTheme"
                 android:textColor="@color/white"
 
                 android:layout_alignParentLeft="true"/>
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 style="?android:textAppearanceSmall"
-                android:backgroundTint="@color/colorTheme"
+                app:backgroundTint="@color/colorTheme"
                 android:textColor="@color/white"
                 android:layout_alignParentRight="true"
                 android:text="Send"

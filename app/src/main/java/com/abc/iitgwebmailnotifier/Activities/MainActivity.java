@@ -59,6 +59,7 @@ import com.abc.iitgwebmailnotifier.Services.asyncCopyMails;
 import com.abc.iitgwebmailnotifier.Services.asyncCreateFolder;
 import com.abc.iitgwebmailnotifier.Services.asyncDeleteEmails;
 import com.abc.iitgwebmailnotifier.Services.asyncDeleteFolder;
+import com.abc.iitgwebmailnotifier.Services.asyncGetFolders;
 import com.abc.iitgwebmailnotifier.Services.asyncMoveMails;
 import com.abc.iitgwebmailnotifier.loadRecentMails;
 import com.abc.iitgwebmailnotifier.models.Email;
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        mSession = new UserSessionManager(getApplicationContext());
+        mSession = new UserSessionManager(getApplicationContext(),username);
         if (mSession.checkLogin()) {
             finish();
             return;
@@ -215,6 +216,7 @@ public class MainActivity extends AppCompatActivity
                 if (mRecyclerView.getVisibility()==View.GONE){
                     getErrorText().setVisibility(View.GONE);
                     webView.setVisibility(View.GONE);
+                    getSwipeRefreshLayout().setEnabled(true);
                     MainActivity.this.setTitle(activeFolder);
                     mRecyclerView.setVisibility(View.VISIBLE);
                     switchButton.setText("Switch to Webview");
@@ -328,7 +330,7 @@ public class MainActivity extends AppCompatActivity
         task = new loadRecentMails(MainActivity.this, username, password, server,
                 activeFolder,mailSet,"oncreate");
         taskCanceler = new TaskCanceler(task,MainActivity.this);
-        handler.postDelayed(taskCanceler, 8*1000);
+        handler.postDelayed(taskCanceler, 15*1000);
         task.execute();
 
 /*
@@ -697,7 +699,9 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
-        final List<String> folderNames = pop3ssl.getFolderNames(username, password, server);
+
+        final List<String> folderNames = asyncGetFolders.folders;
+
         String[] arraySpinner = new String[folderNames.size()];
         for (int i = 0; i < folderNames.size(); i++) {
             arraySpinner[i] = folderNames.get(i);

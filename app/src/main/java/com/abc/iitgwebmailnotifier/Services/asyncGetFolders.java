@@ -22,6 +22,8 @@ public class asyncGetFolders extends AsyncTask<Object, Object, List<String>> {
 
     private String server;
 
+    public static List<String> folders;
+
     public asyncGetFolders(MainActivity activity, String user, String pass, String server){
         this.activity = activity;
         this.username = user;
@@ -43,6 +45,7 @@ public class asyncGetFolders extends AsyncTask<Object, Object, List<String>> {
 
     protected void onPostExecute(List<String> response) {
         if (!response.isEmpty()){
+            folders = response;
             SubMenu subMenu = activity.getSubMenu();
             subMenu.clear();
             activity.populateNavigationFolderItems(subMenu);

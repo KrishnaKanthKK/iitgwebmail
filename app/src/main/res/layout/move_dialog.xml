@@ -12,6 +12,7 @@
         android:id="@+id/spinner_move"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@android:style/Widget.Holo.Light.Spinner"
         >
     </Spinner>
 

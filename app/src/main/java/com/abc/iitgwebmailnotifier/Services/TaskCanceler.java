@@ -30,7 +30,7 @@ public class TaskCanceler implements Runnable{
             ((MainActivity)activity).getErrorText().setVisibility(View.VISIBLE);
             ((MainActivity)activity).getSwipeRefreshLayout().setEnabled(true);
             ((MainActivity)activity).getSwipeRefreshLayout().setRefreshing(false);
-        }else if (task.getStatus() == AsyncTask.Status.RUNNING && activity instanceof LoginManager){
+        }else if (task.getStatus() == AsyncTask.Status.RUNNING && activity instanceof LoginActivity){
             task.cancel(true);
             ((LoginActivity)activity).getProgressBar().setVisibility(View.GONE);
             ((LoginActivity)activity).getSignInButton().setVisibility(View.VISIBLE);

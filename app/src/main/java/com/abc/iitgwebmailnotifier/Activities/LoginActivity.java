@@ -75,8 +75,6 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        session = new UserSessionManager(getApplicationContext());
-
         email = (TextView) findViewById(R.id.webmailId);
         password = (TextView) findViewById(R.id.password);
         signInButton = (Button) findViewById(R.id.signInButton);
@@ -113,6 +111,8 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
                 }
                 String username = email.getText().toString();
                 String pass = password.getText().toString().trim();
+                session = new UserSessionManager(getApplicationContext(),username);
+
                 task = new LoginManager(LoginActivity.this,username,pass,POP3server);
 
                 TaskCanceler taskCanceler = new TaskCanceler(task,LoginActivity.this);

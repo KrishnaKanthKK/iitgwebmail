@@ -47,14 +47,14 @@
             android:textColor="@color/white"
             style="?android:textAppearanceSmall"/>
         </LinearLayout>
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/switchButton"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Switch to WebView"
             android:clickable="true"
-            android:backgroundTint="@color/colorTheme"
+            app:backgroundTint="@color/colorTheme"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

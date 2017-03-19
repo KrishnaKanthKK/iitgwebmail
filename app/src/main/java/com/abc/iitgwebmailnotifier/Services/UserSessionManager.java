@@ -36,11 +36,11 @@ public class UserSessionManager {
 
     public static final String KEY_SERVER = "AuthenticationToken";
 
-    public UserSessionManager(Context context){
+    public UserSessionManager(Context context,String username){
         this.context = context;
         preferences = context.getSharedPreferences(PREFER_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
-        username = getUserDetails(context).get(KEY_USERNAME);
+        this.username = username;
     }
 
     public void createUserLoginSession(User user){

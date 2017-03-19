@@ -86,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner"
                 android:layout_marginTop="10dp"
+                style="@android:style/Widget.Holo.Light.Spinner"
                 />
 
             <FrameLayout
@@ -100,17 +101,18 @@
                     android:layout_gravity="center_horizontal"
                     android:visibility="gone" />
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/signInButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Login"
                     android:clickable="true"
                     style="?android:textAppearanceSmall"
-                    android:backgroundTint="@color/colorTheme"
+                    app:backgroundTint="@color/colorTheme"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
             </FrameLayout>
+
 
         </LinearLayout>
     </LinearLayout>

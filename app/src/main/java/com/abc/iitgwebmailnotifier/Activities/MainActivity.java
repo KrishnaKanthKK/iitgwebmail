@@ -185,17 +185,18 @@ public class MainActivity extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.pulldownswipe);
+        preferences = getSharedPreferences(UserSessionManager.PREFER_NAME, getApplicationContext().MODE_PRIVATE);
+        username = preferences.getString(UserSessionManager.KEY_USERNAME, "");
+        password = preferences.getString(UserSessionManager.KEY_PASSWORD, "");
+        server = preferences.getString(UserSessionManager.KEY_SERVER, "");
+
         mSession = new UserSessionManager(getApplicationContext(),username);
         if (mSession.checkLogin()) {
             finish();
             return;
         }
 
-        swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.pulldownswipe);
-        preferences = getSharedPreferences(UserSessionManager.PREFER_NAME, getApplicationContext().MODE_PRIVATE);
-        username = preferences.getString(UserSessionManager.KEY_USERNAME, "");
-        password = preferences.getString(UserSessionManager.KEY_PASSWORD, "");
-        server = preferences.getString(UserSessionManager.KEY_SERVER, "");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_inbox);
         progressBar = (ProgressBar) findViewById(R.id.progressBar_recycler);
@@ -207,6 +208,8 @@ public class MainActivity extends AppCompatActivity
         mailFilter =(TextView) findViewById(R.id.textview_mail_filter);
         linearFilter = (LinearLayout) findViewById(R.id.linear_filter);
         ErrorText = (TextView) findViewById(R.id.error_text);
+
+        MainActivity.this.setTitle("Inbox");
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -391,7 +394,13 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.move || id == R.id.copy) {
             if (RecyclerAdapter.checkedEmails.size() >= 1){
-                populateAlert(id);
+                try {
+                    populateAlert(id);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
             }else{
                 Toast.makeText(getApplicationContext(), "No messages were selected",
                         Toast.LENGTH_SHORT).show();
@@ -455,8 +464,12 @@ public class MainActivity extends AppCompatActivity
             alertDialog.show();
 
         }else if (id == R.id.notification){
-            getSwipeRefreshLayout().setRefreshing(false);
-            task.cancel(true);
+            try {
+                getSwipeRefreshLayout().setRefreshing(false);
+                task.cancel(true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             Intent i = new Intent(MainActivity.this,SendNotificationActivity.class);
             startActivity(i);
         }
@@ -707,7 +720,7 @@ public class MainActivity extends AppCompatActivity
             arraySpinner[i] = folderNames.get(i);
         }
         Spinner spinner = (Spinner) promptsView.findViewById(R.id.spinner_move);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, arraySpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_item, arraySpinner);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new OnSpinnerItemClicked());
         // set dialog message

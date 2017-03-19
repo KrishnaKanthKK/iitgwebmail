@@ -27,23 +27,23 @@
             android:text="1-50 of     "
             android:gravity="center"
             android:textColor="@color/black"/>
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_lessthan"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:text="@string/button_text_less"
             android:clickable="true"
-            android:backgroundTint="@color/colorTheme"
+            app:backgroundTint="@color/colorTheme"
             android:textColor="@color/white"
             style="?android:textAppearanceSmall"
             />
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_greaterthan"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:text=">"
             android:clickable="true"
-            android:backgroundTint="@color/colorTheme"
+            app:backgroundTint="@color/colorTheme"
             android:textColor="@color/white"
             style="?android:textAppearanceSmall"/>
         </LinearLayout>

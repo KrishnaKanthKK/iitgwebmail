@@ -3,6 +3,7 @@ package com.abc.iitgwebmailnotifier.Services;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.abc.iitgwebmailnotifier.Activities.LoginActivity;
 import com.abc.iitgwebmailnotifier.models.User;
@@ -59,7 +60,10 @@ public class UserSessionManager {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
-            new asyncSendToken(username,token,"false").execute();
+            Log.e("working","working");
+            if (!username.equals("")){
+                new asyncSendToken(username,token,"false").execute();
+            }
 
             return true;
         }

@@ -116,7 +116,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemSelecte
                 task = new LoginManager(LoginActivity.this,username,pass,POP3server);
 
                 TaskCanceler taskCanceler = new TaskCanceler(task,LoginActivity.this);
-                handler.postDelayed(taskCanceler,12*1000);
+                handler.postDelayed(taskCanceler,15*1000);
                 task.execute();
             }
         });

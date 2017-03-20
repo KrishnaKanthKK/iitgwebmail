@@ -9,4 +9,6 @@
     <color name="DarkGrey">#4e52524f</color>
     <color name="Grey">#4c5156</color>
     <color name="white">#FFFFFF</color>
+    <color name="DefaultBackground">#FAFAFA</color>
+
 </resources>

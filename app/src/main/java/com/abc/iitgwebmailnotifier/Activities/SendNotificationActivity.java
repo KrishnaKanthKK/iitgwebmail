@@ -178,14 +178,13 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
                                         RadioButton radioButton = (RadioButton) promptsView.findViewById(radio_id);
                                         String radioText = radioButton.getText().toString();
 
-
                                         if (batch_number > MIN_BATCH_NUMBER && batch_number < 2017){
                                             preferences1 = getSharedPreferences("subscription",getApplicationContext().MODE_PRIVATE);
                                             if (preferences1.getString("subscribe","").equals("")){
                                                 FirebaseMessaging.getInstance().subscribeToTopic(department+batch_number+radioText);
                                             }else {
-                                                FirebaseMessaging.getInstance().subscribeToTopic(department+batch_number+radioText);
                                                 FirebaseMessaging.getInstance().unsubscribeFromTopic(preferences1.getString("subscribe",""));
+                                                FirebaseMessaging.getInstance().subscribeToTopic(department+batch_number+radioText);
                                             }
                                             editor = preferences1.edit();
                                             editor.putString("subscribe",department+batch_number+radioText);

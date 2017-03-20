@@ -28,6 +28,7 @@ public class TaskCanceler implements Runnable{
             task.cancel(true);
             ((MainActivity)activity).getProgressBar().setVisibility(View.GONE);
             ((MainActivity)activity).getErrorText().setVisibility(View.VISIBLE);
+            ((MainActivity)activity).getmRecyclerView().setVisibility(View.GONE);
             ((MainActivity)activity).getSwipeRefreshLayout().setEnabled(true);
             ((MainActivity)activity).getSwipeRefreshLayout().setRefreshing(false);
         }else if (task.getStatus() == AsyncTask.Status.RUNNING && activity instanceof LoginActivity){

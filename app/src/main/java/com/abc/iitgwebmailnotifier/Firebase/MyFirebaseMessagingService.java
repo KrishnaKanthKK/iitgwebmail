@@ -97,8 +97,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setLargeIcon(largeIcon)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(message).setBigContentTitle(title))
-
+                        .setBigContentTitle(title)
+                        .bigText(message))
                 .setContentIntent(pendingIntent)
                 .setColor(ContextCompat.getColor(context, R.color.black))
                 .setAutoCancel(true)

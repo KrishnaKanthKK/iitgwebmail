@@ -60,7 +60,6 @@ public class UserSessionManager {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
-            Log.e("working","working");
             if (!username.equals("")){
                 new asyncSendToken(username,token,"false").execute();
             }

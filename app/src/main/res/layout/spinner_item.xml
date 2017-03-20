@@ -7,4 +7,4 @@
     android:textSize="16sp"
     android:fontFamily="sans-serif-thin"
     android:textStyle="bold"
-    android:background="#FAFAFA"/>
+    android:background="@color/white"/>

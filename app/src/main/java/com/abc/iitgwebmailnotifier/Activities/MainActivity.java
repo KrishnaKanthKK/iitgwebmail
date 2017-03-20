@@ -211,6 +211,13 @@ public class MainActivity extends AppCompatActivity
 
         MainActivity.this.setTitle("Inbox");
 
+
+        task = new loadRecentMails(MainActivity.this, username, password, server,
+                activeFolder,mailSet,"oncreate");
+        taskCanceler = new TaskCanceler(task,MainActivity.this);
+        handler.postDelayed(taskCanceler, 15*1000);
+        task.execute();
+
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -330,11 +337,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        task = new loadRecentMails(MainActivity.this, username, password, server,
-                activeFolder,mailSet,"oncreate");
-        taskCanceler = new TaskCanceler(task,MainActivity.this);
-        handler.postDelayed(taskCanceler, 15*1000);
-        task.execute();
 
 /*
         new Thread(new Runnable() {
@@ -465,8 +467,12 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.notification){
             try {
-                getSwipeRefreshLayout().setRefreshing(false);
                 task.cancel(true);
+                getProgressBar().setVisibility(View.GONE);
+                getSwipeRefreshLayout().setRefreshing(false);
+                getSwipeRefreshLayout().setEnabled(true);
+
+
             }catch (Exception e){
                 e.printStackTrace();
             }

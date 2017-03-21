@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+
 import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
@@ -63,12 +64,13 @@ public class POP3ssl {
             props.setProperty("mail."+protocol+".ssl.enable", "true");
             props.put("mail."+protocol+".socketFactory" , "993");
             props.setProperty("mail."+protocol+".socketFactory.class" , a );
-            props.put("mail."+protocol+".connectiontimeout",1000);
+
 
             Session session = Session.getInstance(props);
 
             emailStore = session.getStore(protocol+"s");
             emailStore.connect(server,993,username, password);
+
             if (flag){
                 emailStore.close();
             }

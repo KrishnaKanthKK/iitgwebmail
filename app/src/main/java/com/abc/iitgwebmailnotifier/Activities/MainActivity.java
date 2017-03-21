@@ -467,7 +467,9 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.notification){
             try {
-                task.cancel(true);
+
+                boolean flag = task.cancel(true);
+                Log.e("flag", String.valueOf(flag));
                 getProgressBar().setVisibility(View.GONE);
                 getSwipeRefreshLayout().setRefreshing(false);
                 getSwipeRefreshLayout().setEnabled(true);

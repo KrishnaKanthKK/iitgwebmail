@@ -71,8 +71,8 @@ public class asyncDeleteEmails extends AsyncTask<Object, Object, String> {
     public void removeEmails(List<Email> emails) {
         for (Email e : emails){
             RecyclerAdapter.emails.remove(e);
-            activity.getmRecyclerAdapter().notifyItemRemoved(e.getPosition());
-            activity.getmRecyclerAdapter().notifyItemRangeChanged(e.getPosition(), RecyclerAdapter.emails.size());
+            activity.getmRecyclerAdapter().notifyDataSetChanged();
+
         }
         Log.e("email", String.valueOf(emails.size()));
 

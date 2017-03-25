@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +73,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -211,21 +213,32 @@ public class MainActivity extends AppCompatActivity
 
         MainActivity.this.setTitle("Inbox");
 
-
-        task = new loadRecentMails(MainActivity.this, username, password, server,
-                activeFolder,mailSet,"oncreate");
-        taskCanceler = new TaskCanceler(task,MainActivity.this);
-        handler.postDelayed(taskCanceler, 15*1000);
-        task.execute();
+        if (!mobileData(getApplicationContext())){
+            task = new loadRecentMails(MainActivity.this, username, password, server,
+                    activeFolder,mailSet,"oncreate");
+            taskCanceler = new TaskCanceler(task,MainActivity.this);
+            handler.postDelayed(taskCanceler, 15*1000);
+            task.execute();
+        }else{
+            getmRecyclerView().setVisibility(View.GONE);
+            getErrorText().setVisibility(View.VISIBLE);
+        }
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSwipeRefreshLayout().setRefreshing(false);
-                task.cancel(true);
-                if (mRecyclerView.getVisibility()==View.GONE){
+                try {
+                    getSwipeRefreshLayout().setRefreshing(false);
+                    task.cancel(true);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                if (webView.getVisibility()==View.VISIBLE){
                     getErrorText().setVisibility(View.GONE);
                     webView.setVisibility(View.GONE);
+                    webView.stopLoading();
+                    webView.clearHistory();
                     getSwipeRefreshLayout().setEnabled(true);
                     MainActivity.this.setTitle(activeFolder);
                     mRecyclerView.setVisibility(View.VISIBLE);
@@ -242,27 +255,32 @@ public class MainActivity extends AppCompatActivity
         lessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mailSet>1){
-                    mailSet--;
-                    task = new loadRecentMails(MainActivity.this, username, password, server,
-                            activeFolder,mailSet,"lessbutton");
-                    task.execute();
+                if (!mobileData(getApplicationContext())){
+                    if (mailSet>1){
+                        mailSet--;
+                        task = new loadRecentMails(MainActivity.this, username, password, server,
+                                activeFolder,mailSet,"lessbutton");
+                        task.execute();
+                    }
                 }
+
             }
         });
         greaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e("mailset", String.valueOf(mailSet));
-                try {
-                    if (mailSet < (float) RecyclerAdapter.emails.get(0).getTotalMails()/50){
-                        mailSet++;
-                        task = new loadRecentMails(MainActivity.this, username, password, server,
-                                activeFolder,mailSet,"greaterbutton");
-                        task.execute();
+                if (!mobileData(getApplicationContext())){
+                    try {
+                        if (mailSet < (float) RecyclerAdapter.emails.get(0).getTotalMails()/50){
+                            mailSet++;
+                            task = new loadRecentMails(MainActivity.this, username, password, server,
+                                    activeFolder,mailSet,"greaterbutton");
+                            task.execute();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
 
 
@@ -319,12 +337,18 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mailSet = 1;
-                task = new loadRecentMails(MainActivity.this, username, password, server,
-                        activeFolder,mailSet,"pulldown");
-                taskCanceler = new TaskCanceler(task,MainActivity.this);
-                handler.postDelayed(taskCanceler, 15*1000);
-                task.execute();
+                if (!mobileData(getApplicationContext())){
+                    mailSet = 1;
+                    task = new loadRecentMails(MainActivity.this, username, password, server,
+                            activeFolder,mailSet,"pulldown");
+                    taskCanceler = new TaskCanceler(task,MainActivity.this);
+                    handler.postDelayed(taskCanceler, 15*1000);
+                    task.execute();
+                }else {
+                    getErrorText().setVisibility(View.VISIBLE);
+                    getmRecyclerView().setVisibility(View.GONE);
+                    getSwipeRefreshLayout().setRefreshing(false);
+                }
 
             }
         });
@@ -655,24 +679,28 @@ public class MainActivity extends AppCompatActivity
         s.add("Inbox").setIcon(R.drawable.ic_inbox_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                mailSet = 1;
-                task = new loadRecentMails(MainActivity.this, username, password,
-                        server, "INBOX",mailSet,"navigation");
-                task.execute();
-                activeFolder = "INBOX";
-                MainActivity.this.setTitle("Inbox");
+                if (!mobileData(getApplicationContext())){
+                    mailSet = 1;
+                    task = new loadRecentMails(MainActivity.this, username, password,
+                            server, "INBOX",mailSet,"navigation");
+                    task.execute();
+                    activeFolder = "INBOX";
+                    MainActivity.this.setTitle("Inbox");
+                }
                 return false;
             }
         });
         s.add("Sent").setIcon(R.drawable.ic_send_white_24dp).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                mailSet = 1;
-                task =new loadRecentMails(MainActivity.this, username, password, server,
-                        "Sent",mailSet,"navigation");
-                task.execute();
-                activeFolder = "Sent";
-                MainActivity.this.setTitle("Sent");
+                if (!mobileData(getApplicationContext())){
+                    mailSet = 1;
+                    task =new loadRecentMails(MainActivity.this, username, password, server,
+                            "Sent",mailSet,"navigation");
+                    task.execute();
+                    activeFolder = "Sent";
+                    MainActivity.this.setTitle("Sent");
+                }
                 return false;
             }
         });
@@ -689,11 +717,13 @@ public class MainActivity extends AppCompatActivity
                         if (folderNames.size()==1){
                             caller = "create";
                         }
-                        task = new loadRecentMails(MainActivity.this, username, password, server
-                                , name,mailSet,caller);
-                        task.execute();
-                        activeFolder = name;
-                        MainActivity.this.setTitle(name);
+                        if (!mobileData(getApplicationContext())){
+                            task = new loadRecentMails(MainActivity.this, username, password, server
+                                    , name,mailSet,caller);
+                            task.execute();
+                            activeFolder = name;
+                            MainActivity.this.setTitle(name);
+                        }
                         return false;
                     }
                 });
@@ -804,6 +834,22 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    public boolean mobileData(Context context){
+        boolean mobileDataEnabled = false; // Assume disabled
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            Class cmClass = Class.forName(cm.getClass().getName());
+            Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+            method.setAccessible(true); // Make the method callable
+            // get the setting for "mobile data"
+            mobileDataEnabled = (Boolean)method.invoke(cm);
+        } catch (Exception e) {
+            // Some problem accessible private API
+            // TODO do whatever error handling you want here
+        }
+        return mobileDataEnabled;
     }
 
     @Override

@@ -30,9 +30,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTheme"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
             android:textSize="40sp"
             android:text="IITG Webmail"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/Grey"
+            android:text="Login using Local Network"
             android:textAlignment="center"/>
 
 

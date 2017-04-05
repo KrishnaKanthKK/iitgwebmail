@@ -8,6 +8,7 @@ import android.util.Log;
 import com.abc.iitgwebmailnotifier.Activities.LoginActivity;
 import com.abc.iitgwebmailnotifier.models.User;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -24,7 +25,7 @@ public class UserSessionManager {
 
     Context context;
 
-    String token = FirebaseInstanceId.getInstance().getToken();
+    public static String token = FirebaseInstanceId.getInstance().getToken();
     String username;
 
     public static final String PREFER_NAME = "SharedPreferences";
@@ -87,6 +88,15 @@ public class UserSessionManager {
     }
 
     public void logoutUser(){
+
+        SharedPreferences preferences = context.getSharedPreferences("subscription",context.MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = preferences.edit();
+        String subscription = preferences.getString("subscribe","");
+        if (!subscription.equals("")){
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(subscription);
+        }
+        editor1.clear();
+        editor1.apply();
 
         new asyncSendToken(username,token,"false").execute();
 

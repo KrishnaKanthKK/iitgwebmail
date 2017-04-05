@@ -26,6 +26,7 @@ import com.abc.iitgwebmailnotifier.Services.JSONSerializer;
 import com.abc.iitgwebmailnotifier.Services.UserSessionManager;
 import com.abc.iitgwebmailnotifier.Services.asyncCreateFolder;
 import com.abc.iitgwebmailnotifier.Services.asyncSendNotification;
+import com.abc.iitgwebmailnotifier.Services.asyncSendToken;
 import com.abc.iitgwebmailnotifier.Services.asyncSingleDevice;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -86,7 +87,6 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
             unsubscribe.setVisibility(View.VISIBLE);
             Log.e("a",preferences1.getString("subscribe",""));
         }else{
-            Log.e("b","b");
             unsubscribe.setVisibility(View.GONE);
         }
         unsubscribe.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +214,9 @@ public class SendNotificationActivity extends Activity implements AdapterView.On
                 alertDialog.show();
             }
         });
+
+        new asyncSendToken(username,UserSessionManager.token,"true").execute();
+
 
 
     }

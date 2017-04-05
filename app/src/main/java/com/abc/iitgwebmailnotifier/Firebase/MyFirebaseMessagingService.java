@@ -45,12 +45,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         }else{
             String title =remoteMessage.getNotification().getTitle();
+
             String message = remoteMessage.getNotification().getBody();
+
             if (Build.VERSION.SDK_INT >= 24){
                 sendNotificationForHIGHERVERSIONS(title,message);
             }else {
                 sendNotification(title,message);
             }
+
 
         }
 
